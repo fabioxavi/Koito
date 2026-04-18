@@ -8,6 +8,7 @@ export default [
   route("/chart/top-albums", "routes/Charts/AlbumChart.tsx"),
   route("/chart/top-artists", "routes/Charts/ArtistChart.tsx"),
   route("/chart/top-tracks", "routes/Charts/TrackChart.tsx"),
+  route("/chart/listens", "routes/Charts/Listens.tsx"),
   route("/listens", "routes/Charts/Listens.tsx"),
   route("/rewind", "routes/RewindPage.tsx"),
   route("/theme-helper", "routes/ThemeHelper.tsx"),
