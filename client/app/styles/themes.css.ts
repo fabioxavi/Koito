@@ -213,6 +213,22 @@ export const themes: Record<string, Theme> = {
     success: "#28A745",
     info: "#17A2B8",
   },
+  lastfm: {
+    bg: "#121212",
+    bgSecondary: "#1a1a1a",
+    bgTertiary: "#2a2a2a",
+    fg: "#ffffff",
+    fgSecondary: "#b3b3b3",
+    fgTertiary: "#666666",
+    primary: "#e07b39",
+    primaryDim: "#c66a2d",
+    accent: "#e07b39",
+    accentDim: "#c66a2d",
+    error: "#f44336",
+    warning: "#ff9800",
+    success: "#4caf50",
+    info: "#2196f3",
+  },
 };
 
 export default themes;

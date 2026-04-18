@@ -12,6 +12,7 @@ import {
 } from "api/api";
 import { Link } from "react-router";
 import { useAppContext } from "~/providers/AppProvider";
+import { History } from "lucide-react";
 
 interface Props {
   limit: number;
@@ -86,10 +87,13 @@ export default function LastPlays(props: Props) {
   params += props.trackId ? `&track_id=${props.trackId}` : "";
 
   return (
-    <div className="text-sm sm:text-[16px]">
-      <h3 className="hover:underline">
-        <Link to={`/listens?period=all_time${params}`}>{header}</Link>
-      </h3>
+    <div className="text-sm sm:text-[16px] w-full">
+      <Link to={`/listens?period=all_time${params}`} className="group">
+        <div className="flex items-center gap-2 mb-4">
+          <History size={18} className="text-(--color-primary)" />
+          <h3 className="text-lg font-semibold group-hover:underline">{header}</h3>
+        </div>
+      </Link>
       <table className="-ml-4">
         <tbody>
           {props.showNowPlaying && npData && npData.currently_playing && (

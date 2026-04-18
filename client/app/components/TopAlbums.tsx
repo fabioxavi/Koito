@@ -9,11 +9,13 @@ import {
 import { Link } from "react-router";
 import TopListSkeleton from "./skeletons/TopListSkeleton";
 import TopItemList from "./TopItemList";
+import { Disc } from "lucide-react";
 
 interface Props {
   limit: number;
   period: string;
   artistId?: Number;
+  hideHeader?: boolean;
 }
 
 export default function TopAlbums(props: Props) {
@@ -30,19 +32,31 @@ export default function TopAlbums(props: Props) {
     queryFn: ({ queryKey }) => getTopAlbums(queryKey[1] as getItemsArgs),
   });
 
-  const header = "Top albums";
-
   if (isPending) {
     return (
-      <div className="w-[300px]">
-        <h3>{header}</h3>
-        <p>Loading...</p>
+      <div>
+        {!props.hideHeader && (
+          <Link to={`/chart/top-albums?period=${props.period}`} className="group">
+            <div className="flex items-center gap-2 mb-4">
+              <Disc size={18} className="text-(--color-primary)" />
+              <h3 className="text-lg font-semibold group-hover:underline">Top Albums</h3>
+            </div>
+          </Link>
+        )}
+        <p className="text-(--color-fg-secondary)">Loading...</p>
       </div>
     );
   } else if (isError) {
     return (
-      <div className="w-[300px]">
-        <h3>{header}</h3>
+      <div>
+        {!props.hideHeader && (
+          <Link to={`/chart/top-albums?period=${props.period}`} className="group">
+            <div className="flex items-center gap-2 mb-4">
+              <Disc size={18} className="text-(--color-primary)" />
+              <h3 className="text-lg font-semibold group-hover:underline">Top Albums</h3>
+            </div>
+          </Link>
+        )}
         <p className="error">Error: {error.message}</p>
       </div>
     );
@@ -50,18 +64,24 @@ export default function TopAlbums(props: Props) {
 
   return (
     <div>
-      <h3 className="hover:underline">
+      {!props.hideHeader && (
         <Link
           to={`/chart/top-albums?period=${props.period}${
             props.artistId ? `&artist_id=${props.artistId}` : ""
           }`}
+          className="group"
         >
-          {header}
+          <div className="flex items-center gap-2 mb-4">
+            <Disc size={18} className="text-(--color-primary)" />
+            <h3 className="text-lg font-semibold group-hover:underline">Top Albums</h3>
+          </div>
         </Link>
-      </h3>
-      <div className="max-w-[300px]">
+      )}
+      <div>
         <TopItemList type="album" data={data} />
-        {data.items.length < 1 ? "Nothing to show" : ""}
+        {data.items.length < 1 && (
+          <p className="text-(--color-fg-secondary)">Nothing to show</p>
+        )}
       </div>
     </div>
   );

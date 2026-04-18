@@ -7,12 +7,12 @@ interface Props {
 }
 
 export default function PeriodSelector({ setter, current, disableCache = false }: Props) {
-    const periods = ['day', 'week', 'month', 'year', 'all_time']
-
-    const periodDisplay = (str: string) => {
-        return str.split('_').map(w => w.split('').map((char, index) =>
-            index === 0 ? char.toUpperCase() : char).join('')).join(' ')
-    }
+    const periods = [
+        { value: 'day', label: 'Last day' },
+        { value: 'week', label: 'Last week' },
+        { value: 'month', label: 'Last month' },
+        { value: 'year', label: 'Last year' },
+    ]
 
     const setPeriod = (val: string) => {
         setter(val)
@@ -31,21 +31,19 @@ export default function PeriodSelector({ setter, current, disableCache = false }
       }, []);
 
     return (
-        <div className="flex gap-2 grow-0 text-sm sm:text-[16px]">
-            <p>Showing stats for:</p>
-            {periods.map((p, i) => (
-                <div key={`period_setter_${p}`}>
-                    <button 
-                        className={`period-selector ${p === current ? 'color-fg' : 'color-fg-secondary'} ${i !== periods.length - 1 ? 'pr-2' : ''}`}
-                        onClick={() => setPeriod(p)}
-                        disabled={p === current}
-                    >
-                        {periodDisplay(p)}
-                    </button>
-                    <span className="color-fg-secondary">
-                        {i !== periods.length - 1 ? '|' : ''}
-                    </span>
-                </div>
+        <div className="flex flex-wrap items-center gap-2">
+            {periods.map((p) => (
+                <button 
+                    key={`period_setter_${p.value}`}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 border ${
+                        p.value === current 
+                            ? 'bg-(--color-bg-tertiary) text-(--color-fg) border-(--color-fg-tertiary)' 
+                            : 'bg-transparent text-(--color-fg-secondary) border-(--color-bg-tertiary) hover:bg-(--color-bg-tertiary) hover:text-(--color-fg)'
+                    }`}
+                    onClick={() => setPeriod(p.value)}
+                >
+                    {p.label}
+                </button>
             ))}
         </div>
     )

@@ -27,16 +27,15 @@ export default function TopItemList<T extends Ranked<Item>>({
   ranked,
 }: Props<T>) {
   return (
-    <div className={`flex flex-col gap-1 ${className} min-w-[200px]`}>
+    <div className={`flex flex-col gap-2 ${className}`}>
       {data.items.map((item, index) => {
         const key = `${type}-${item.item.id}`;
         return (
           <div
             key={key}
-            style={{ fontSize: 12 }}
-            className={`${
+            className={`text-sm ${
               separators && index !== data.items.length - 1
-                ? "border-b border-(--color-fg-tertiary) mb-1 pb-2"
+                ? "border-b border-(--color-bg-tertiary) pb-2"
                 : ""
             }`}
           >
@@ -65,35 +64,34 @@ function ItemCard({
   rank: number;
   ranked?: boolean;
 }) {
-  const itemClasses = `flex items-center gap-2`;
+  const itemClasses = `flex items-center gap-3`;
 
   switch (type) {
     case "album": {
       const album = item as Album;
 
       return (
-        <div style={{ fontSize: 12 }} className={itemClasses}>
-          {ranked && <div className="w-7 text-end">{rank}</div>}
+        <div className={itemClasses}>
+          {ranked && <div className="w-6 text-(--color-fg-secondary) text-right">{rank}</div>}
           <Link to={`/album/${album.id}`}>
             <img
               loading="lazy"
               src={imageUrl(album.image, "small")}
               alt={album.title}
-              className="min-w-[48px]"
+              className="w-12 h-12 rounded object-cover"
             />
           </Link>
-          <div>
+          <div className="flex-1 min-w-0">
             <Link
               to={`/album/${album.id}`}
-              className="hover:text-(--color-fg-secondary)"
+              className="hover:text-(--color-fg-secondary) block truncate"
             >
-              <span style={{ fontSize: 14 }}>{album.title}</span>
+              {album.title}
             </Link>
-            <br />
             {album.is_various_artists ? (
-              <span className="color-fg-secondary">Various Artists</span>
+              <span className="text-(--color-fg-secondary) text-xs">Various Artists</span>
             ) : (
-              <div>
+              <div className="text-xs">
                 <ArtistLinks
                   artists={
                     album.artists
@@ -103,8 +101,8 @@ function ItemCard({
                 />
               </div>
             )}
-            <div className="color-fg-secondary">{album.listen_count} plays</div>
           </div>
+          <div className="text-(--color-fg-secondary) text-xs">{album.listen_count} plays</div>
         </div>
       );
     }
@@ -112,59 +110,54 @@ function ItemCard({
       const track = item as Track;
 
       return (
-        <div style={{ fontSize: 12 }} className={itemClasses}>
-          {ranked && <div className="w-7 text-end">{rank}</div>}
+        <div className={itemClasses}>
+          {ranked && <div className="w-6 text-(--color-fg-secondary) text-right">{rank}</div>}
           <Link to={`/track/${track.id}`}>
             <img
               loading="lazy"
               src={imageUrl(track.image, "small")}
               alt={track.title}
-              className="min-w-[48px]"
+              className="w-12 h-12 rounded object-cover"
             />
           </Link>
-          <div>
+          <div className="flex-1 min-w-0">
             <Link
               to={`/track/${track.id}`}
-              className="hover:text-(--color-fg-secondary)"
+              className="hover:text-(--color-fg-secondary) block truncate"
             >
-              <span style={{ fontSize: 14 }}>{track.title}</span>
+              {track.title}
             </Link>
-            <br />
-            <div>
+            <div className="text-xs">
               <ArtistLinks
                 artists={track.artists || [{ id: 0, Name: "Unknown Artist" }]}
               />
             </div>
-            <div className="color-fg-secondary">{track.listen_count} plays</div>
           </div>
+          <div className="text-(--color-fg-secondary) text-xs">{track.listen_count} plays</div>
         </div>
       );
     }
     case "artist": {
       const artist = item as Artist;
       return (
-        <div style={{ fontSize: 12 }} className={itemClasses}>
-          {ranked && <div className="w-7 text-end">{rank}</div>}
-          <Link
-            className={
-              itemClasses + " mt-1 mb-[6px] hover:text-(--color-fg-secondary)"
-            }
-            to={`/artist/${artist.id}`}
-          >
-            <img
-              loading="lazy"
-              src={imageUrl(artist.image, "small")}
-              alt={artist.name}
-              className="min-w-[48px]"
-            />
-            <div>
-              <span style={{ fontSize: 14 }}>{artist.name}</span>
-              <div className="color-fg-secondary">
-                {artist.listen_count} plays
-              </div>
+        <Link
+          className={`${itemClasses} hover:bg-(--color-bg-tertiary) rounded-md p-1 -m-1 transition-colors`}
+          to={`/artist/${artist.id}`}
+        >
+          {ranked && <div className="w-6 text-(--color-fg-secondary) text-right">{rank}</div>}
+          <img
+            loading="lazy"
+            src={imageUrl(artist.image, "small")}
+            alt={artist.name}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+          <div className="flex-1 min-w-0">
+            <span className="block truncate">{artist.name}</span>
+            <div className="text-(--color-fg-secondary) text-xs">
+              {artist.listen_count} plays
             </div>
-          </Link>
-        </div>
+          </div>
+        </Link>
       );
     }
   }

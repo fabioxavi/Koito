@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import ActivityOptsSelector from "./ActivityOptsSelector";
 import type { Theme } from "~/styles/themes.css";
+import { TrendingUp } from "lucide-react";
 
 function getPrimaryColor(theme: Theme): string {
   const value = theme.primary;
@@ -140,8 +141,11 @@ export default function ActivityGrid({
   }
 
   return (
-    <div className="flex flex-col items-start">
-      <h3>Activity</h3>
+    <div className="flex flex-col items-start w-full">
+      <div className="flex items-center gap-2 mb-4">
+        <TrendingUp size={18} className="text-(--color-primary)" />
+        <h3 className="text-lg font-semibold">Plays per Day</h3>
+      </div>
       {configurable ? (
         <ActivityOptsSelector
           rangeSetter={setRange}

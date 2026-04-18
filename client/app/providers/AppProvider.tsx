@@ -53,7 +53,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       if (cfg.default_theme !== "") {
         setDefaultTheme(cfg.default_theme);
       } else {
-        setDefaultTheme("yuu");
+        setDefaultTheme("lastfm");
       }
     });
   }, []);
