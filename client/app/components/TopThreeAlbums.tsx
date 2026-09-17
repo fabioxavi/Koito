@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getTopAlbums, type getItemsArgs } from "api/api";
 import AlbumDisplay from "./AlbumDisplay";
+import Card from "./Card";
 
 interface Props {
   period: string;
@@ -28,16 +29,20 @@ export default function TopThreeAlbums(props: Props) {
   console.log(data);
 
   return (
-    <div>
+    <Card>
       {!props.hideTitle && <h3>Top Three Albums</h3>}
       <div
         className={`flex ${props.vert ? "flex-col" : ""}`}
         style={{ gap: 15 }}
       >
         {data.items.map((item, index) => (
-          <AlbumDisplay album={item} size={index === 0 ? 190 : 130} />
+          <AlbumDisplay
+            key={item.item.id}
+            album={item.item}
+            size={index === 0 ? 190 : 130}
+          />
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

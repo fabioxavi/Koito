@@ -92,11 +92,13 @@ export default function MediaLayout(props: Props) {
               style={{ zIndex: 5 }}
               src={imageUrl(props.img, "large")}
               alt={props.title}
-              className="md:min-w-[385px] w-[220px] h-auto shadow-(--color-shadow) shadow-lg"
+              className="md:min-w-[385px] w-[220px] h-auto rounded-xl object-cover shadow-lg shadow-black/40"
             />
           </div>
-          <div className="flex flex-col items-start">
-            <h3>{props.type}</h3>
+          <div className="flex flex-col items-start gap-1">
+            <span className="header-font text-xs font-semibold tracking-wide uppercase rounded-full bg-(--color-bg-tertiary) text-(--color-fg-secondary) px-3 py-1">
+              {props.type}
+            </span>
             <div className="flex">
               <h1>
                 {props.title}
@@ -108,7 +110,7 @@ export default function MediaLayout(props: Props) {
             </div>
             {props.subContent}
           </div>
-          <div className="absolute left-1 sm:right-1 sm:left-auto -top-9 sm:top-1 flex gap-3 items-center">
+          <div className="absolute left-1 sm:right-1 sm:left-auto -top-9 sm:top-1 flex gap-1 items-center rounded-xl bg-(--color-bg-secondary)/80 backdrop-blur-sm p-1 border border-(--color-bg-tertiary)">
             {props.musicbrainzId && (
               <Link
                 title="View on MusicBrainz"
@@ -116,6 +118,7 @@ export default function MediaLayout(props: Props) {
                 to={`https://musicbrainz.org/${props.type.toLowerCase()}/${
                   props.musicbrainzId
                 }`}
+                className="hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
               >
                 <MbzIcon size={iconSize} hover />
               </Link>
@@ -126,7 +129,7 @@ export default function MediaLayout(props: Props) {
                   <>
                     <button
                       title="Add Listen"
-                      className="hover:cursor-pointer"
+                      className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
                       onClick={() => setAddListenModalOpen(true)}
                     >
                       <Plus size={iconSize} />
@@ -140,7 +143,7 @@ export default function MediaLayout(props: Props) {
                 )}
                 <button
                   title="Edit Item"
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
                   onClick={() => setRenameModalOpen(true)}
                 >
                   <Edit size={iconSize} />
@@ -149,7 +152,7 @@ export default function MediaLayout(props: Props) {
                 {props.type !== "Track" && (
                   <button
                     title="Replace Image"
-                    className="hover:cursor-pointer"
+                    className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
                     onClick={() => setImageModalOpen(true)}
                   >
                     <ImageIcon size={iconSize} />
@@ -157,14 +160,14 @@ export default function MediaLayout(props: Props) {
                 )}
                 <button
                   title="Merge Items"
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
                   onClick={() => setMergeModalOpen(true)}
                 >
                   <Merge size={iconSize} />
                 </button>
                 <button
                   title="Delete Item"
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer hover:bg-(--color-error)/20 hover:text-(--color-error) rounded-lg p-2 transition-colors"
                   onClick={() => setDeleteModalOpen(true)}
                 >
                   <Trash size={iconSize} />

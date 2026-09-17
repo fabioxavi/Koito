@@ -89,7 +89,7 @@ export function Modal({
     >
       <div
         ref={modalRef}
-        className={`bg-secondary rounded-lg shadow-md p-6 w-full relative max-h-3/4 overflow-y-auto transition-all duration-100 ${
+        className={`bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-2xl shadow-xl shadow-black/30 p-6 w-full relative max-h-3/4 overflow-y-auto transition-all duration-100 ${
           isClosing ? 'animate-fade-out-scale' : 'animate-fade-in-scale'
         }`}
         style={{ maxWidth: maxW ?? 600, height: h ?? '' }}
@@ -97,7 +97,7 @@ export function Modal({
         {children}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 color-fg-tertiary hover:cursor-pointer"
+          className="absolute top-3 right-3 text-(--color-fg-tertiary) hover:bg-(--color-bg-tertiary) hover:text-(--color-fg) rounded-lg p-1.5 hover:cursor-pointer transition-colors"
         >
           🞪
         </button>

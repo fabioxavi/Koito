@@ -14,6 +14,7 @@ export default function AlbumDisplay({ album, size }: Props) {
           <img
             src={imageUrl(album.image, "large")}
             alt={album.title}
+            className="rounded-lg object-cover"
             style={{ width: size }}
           />
         </Link>

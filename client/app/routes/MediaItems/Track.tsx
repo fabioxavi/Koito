@@ -78,9 +78,9 @@ export default function Track() {
       <div className="mt-10">
         <PeriodSelector setter={setPeriod} current={period} />
       </div>
-      <div className="flex flex-wrap gap-20 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10 mb-10">
         <LastPlays limit={20} trackId={track.id} />
-        <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col gap-6">
           <ActivityGrid configurable trackId={track.id} />
           <InterestGraph trackId={track.id} />
         </div>

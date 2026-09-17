@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getStats, type Stats, type ApiError } from "api/api";
+import StatTile from "./StatTile";
 
 export default function AllTimeStats() {
   const { isPending, isError, data, error } = useQuery({
@@ -27,31 +28,19 @@ export default function AllTimeStats() {
     );
   }
 
-  const numberClasses = "header-font font-bold text-xl";
-
   return (
     <div>
       <h3>{header}</h3>
-      <div>
-        <span
-          className={numberClasses}
+      <div className="grid grid-cols-2 gap-2 sm:gap-3">
+        <StatTile
+          value={data.minutes_listened}
+          label="Minutes Listened"
           title={Math.floor(data.minutes_listened / 60) + " hours"}
-        >
-          {data.minutes_listened}
-        </span>{" "}
-        Minutes Listened
-      </div>
-      <div>
-        <span className={numberClasses}>{data.listen_count}</span> Plays
-      </div>
-      <div>
-        <span className={numberClasses}>{data.track_count}</span> Tracks
-      </div>
-      <div>
-        <span className={numberClasses}>{data.album_count}</span> Albums
-      </div>
-      <div>
-        <span className={numberClasses}>{data.artist_count}</span> Artists
+        />
+        <StatTile value={data.listen_count} label="Plays" />
+        <StatTile value={data.track_count} label="Tracks" />
+        <StatTile value={data.album_count} label="Albums" />
+        <StatTile value={data.artist_count} label="Artists" />
       </div>
     </div>
   );

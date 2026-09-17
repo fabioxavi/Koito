@@ -12,6 +12,7 @@ import {
 } from "api/api";
 import { Link } from "react-router";
 import { useAppContext } from "~/providers/AppProvider";
+import Card from "./Card";
 
 interface Props {
   limit: number;
@@ -64,17 +65,17 @@ export default function LastPlays(props: Props) {
 
   if (isPending) {
     return (
-      <div className="w-[300px] sm:w-[500px]">
+      <Card className="w-full">
         <h3>{header}</h3>
         <p>Loading...</p>
-      </div>
+      </Card>
     );
   } else if (isError) {
     return (
-      <div className="w-[300px] sm:w-[500px]">
+      <Card className="w-full">
         <h3>{header}</h3>
         <p className="error">Error: {error.message}</p>
-      </div>
+      </Card>
     );
   }
 
@@ -86,19 +87,19 @@ export default function LastPlays(props: Props) {
   params += props.trackId ? `&track_id=${props.trackId}` : "";
 
   return (
-    <div className="text-sm sm:text-[16px]">
+    <Card className="w-full text-sm sm:text-[16px]">
       <h3 className="hover:underline">
         <Link to={`/listens?period=all_time${params}`}>{header}</Link>
       </h3>
-      <table className="-ml-4">
+      <table className="-ml-1.5 w-full">
         <tbody>
           {props.showNowPlaying && npData && npData.currently_playing && (
-            <tr className="group hover:bg-[--color-bg-secondary]">
-              <td className="w-[18px] pr-2 align-middle"></td>
-              <td className="color-fg-tertiary pr-2 sm:pr-4 text-sm whitespace-nowrap w-0">
+            <tr className="group hover:bg-(--color-bg-tertiary)/60 rounded-lg">
+              <td className="w-[18px] pr-2 py-1 align-middle rounded-l-lg"></td>
+              <td className="color-fg-tertiary pr-2 sm:pr-4 py-1 text-sm whitespace-nowrap w-0">
                 Now Playing
               </td>
-              <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px]">
+              <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px] py-1 rounded-r-lg">
                 {props.hideArtists ? null : (
                   <>
                     <ArtistLinks artists={npData.track.artists} /> –{" "}
@@ -116,9 +117,9 @@ export default function LastPlays(props: Props) {
           {listens.map((item) => (
             <tr
               key={`last_listen_${item.time}`}
-              className="group hover:bg-[--color-bg-secondary]"
+              className="group hover:bg-(--color-bg-tertiary)/60 rounded-lg"
             >
-              <td className="w-[18px] pr-2 align-middle">
+              <td className="w-[18px] pr-2 py-1 align-middle rounded-l-lg">
                 <button
                   onClick={() => handleDelete(item)}
                   className="opacity-0 group-hover:opacity-100 transition-opacity text-(--color-fg-tertiary) hover:text-(--color-error)"
@@ -129,12 +130,12 @@ export default function LastPlays(props: Props) {
                 </button>
               </td>
               <td
-                className="color-fg-tertiary pr-2 sm:pr-4 text-sm whitespace-nowrap w-0"
+                className="color-fg-tertiary pr-2 sm:pr-4 py-1 text-sm whitespace-nowrap w-0"
                 title={new Date(item.time).toString()}
               >
                 {timeSince(new Date(item.time))}
               </td>
-              <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px]">
+              <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px] py-1 rounded-r-lg">
                 {props.hideArtists ? null : (
                   <>
                     <ArtistLinks artists={item.track.artists} /> –{" "}
@@ -151,6 +152,6 @@ export default function LastPlays(props: Props) {
           ))}
         </tbody>
       </table>
-    </div>
+    </Card>
   );
 }

@@ -68,10 +68,10 @@ export default function Album() {
       <div className="mt-10">
         <PeriodSelector setter={setPeriod} current={period} />
       </div>
-      <div className="flex flex-wrap gap-20 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10 mb-10">
         <LastPlays limit={30} albumId={album.id} />
         <TopTracks limit={12} period={period} albumId={album.id} />
-        <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col gap-6">
           <ActivityGrid configurable albumId={album.id} />
           <InterestGraph albumId={album.id} />
         </div>

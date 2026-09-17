@@ -135,8 +135,12 @@ h4 {
 
 input[type="text"],
 input[type="password"],
-textarea {
-  border: 1px solid var(--color-bg);
+textarea,
+select {
+  border: 1px solid var(--color-bg-tertiary);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background: var(--color-bg);
 }
 input[type="checkbox"] {
   height: fit-content;
@@ -148,6 +152,7 @@ select:focus-visible,
 textarea:focus-visible {
   border-color: transparent;
   outline: 2px solid var(--color-fg-tertiary);
+  outline-offset: 1px;
 }
 
 button:hover {
@@ -159,14 +164,19 @@ button[disabled]:hover {
 }
 
 button.large-button {
-  background: var(--color-bg);
+  background: var(--color-bg-tertiary);
+  border-radius: 0.6rem;
+  padding: 0.5rem 1.1rem;
+  transition: background-color 0.1s ease;
 }
 button.large-button:hover {
   background: var(--color-bg-tertiary);
+  filter: brightness(1.15);
 }
 button.large-button:disabled:hover,
 button.large-button[disabled]:hover {
-  background: var(--color-bg);
+  background: var(--color-bg-tertiary);
+  filter: none;
 }
 
 button.period-selector {
@@ -182,11 +192,15 @@ button.period-selector:hover {
 
 button.default {
   color: var(--color-fg);
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  transition: background-color 0.1s ease, color 0.1s ease;
 }
 button.default:disabled,
 button.default[disabled]:hover {
   color: var(--color-fg-secondary);
 }
 button.default:hover {
+  background: var(--color-bg-tertiary);
   color: var(--color-fg-secondary);
 }

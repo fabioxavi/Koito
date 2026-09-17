@@ -138,10 +138,10 @@ export default function RewindPage() {
         <div className="flex flex-col lg:flex-row items-start lg:mt-15 mt-5 gap-10 w-19/20 px-5 md:px-20">
           <div className="flex flex-col items-start gap-4">
             <div className="flex flex-col items-start gap-4 py-8">
-              <div className="flex items-center gap-6 justify-around">
+              <div className="flex items-center gap-4 justify-around rounded-full bg-(--color-bg-tertiary)/40 px-2 py-1">
                 <button
                   onClick={() => navigateMonth("prev")}
-                  className="p-2 disabled:text-(--color-fg-tertiary)"
+                  className="p-2 rounded-full hover:bg-(--color-bg-tertiary) transition-colors disabled:text-(--color-fg-tertiary) disabled:hover:bg-transparent"
                   disabled={
                     // Previous month is in the future OR
                     new Date(year, month - 2) > new Date() ||
@@ -156,7 +156,7 @@ export default function RewindPage() {
                 </p>
                 <button
                   onClick={() => navigateMonth("next")}
-                  className="p-2 disabled:text-(--color-fg-tertiary)"
+                  className="p-2 rounded-full hover:bg-(--color-bg-tertiary) transition-colors disabled:text-(--color-fg-tertiary) disabled:hover:bg-transparent"
                   disabled={
                     // next month is current or future month and
                     month >= new Date().getMonth() &&
@@ -167,10 +167,10 @@ export default function RewindPage() {
                   <ChevronRight size={20} />
                 </button>
               </div>
-              <div className="flex items-center gap-6 justify-around">
+              <div className="flex items-center gap-4 justify-around rounded-full bg-(--color-bg-tertiary)/40 px-2 py-1">
                 <button
                   onClick={() => navigateYear("prev")}
-                  className="p-2 disabled:text-(--color-fg-tertiary)"
+                  className="p-2 rounded-full hover:bg-(--color-bg-tertiary) transition-colors disabled:text-(--color-fg-tertiary) disabled:hover:bg-transparent"
                   disabled={new Date(year - 1, month) > new Date()}
                 >
                   <ChevronLeft size={20} />
@@ -178,7 +178,7 @@ export default function RewindPage() {
                 <p className="font-medium text-xl text-center w-30">{year}</p>
                 <button
                   onClick={() => navigateYear("next")}
-                  className="p-2 disabled:text-(--color-fg-tertiary)"
+                  className="p-2 rounded-full hover:bg-(--color-bg-tertiary) transition-colors disabled:text-(--color-fg-tertiary) disabled:hover:bg-transparent"
                   disabled={
                     // Next year date is in the future OR
                     new Date(year + 1, month - 1) > new Date() ||

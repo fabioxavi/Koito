@@ -4,6 +4,7 @@ import { getTopArtists, imageUrl, type getItemsArgs } from "api/api";
 import { Link } from "react-router";
 import TopListSkeleton from "./skeletons/TopListSkeleton";
 import TopItemList from "./TopItemList";
+import Card from "./Card";
 
 interface Props {
   limit: number;
@@ -25,29 +26,29 @@ export default function TopArtists(props: Props) {
 
   if (isPending) {
     return (
-      <div className="w-[300px]">
+      <Card className="w-full min-w-[260px]">
         <h3>{header}</h3>
         <p>Loading...</p>
-      </div>
+      </Card>
     );
   } else if (isError) {
     return (
-      <div className="w-[300px]">
+      <Card className="w-full min-w-[260px]">
         <h3>{header}</h3>
         <p className="error">Error: {error.message}</p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <div>
+    <Card className="w-full min-w-[260px]">
       <h3 className="hover:underline">
         <Link to={`/chart/top-artists?period=${props.period}`}>{header}</Link>
       </h3>
-      <div className="max-w-[300px]">
+      <div>
         <TopItemList type="artist" data={data} />
         {data.items.length < 1 ? "Nothing to show" : ""}
       </div>
-    </div>
+    </Card>
   );
 }

@@ -17,8 +17,8 @@ export default function PeriodSelector({ setter, current, disableCache = false }
     const setPeriod = (val: string) => {
         setter(val)
         if (!disableCache) {
-            localStorage.setItem('period_selection_'+window.location.pathname.split('/')[1], val) 
-        }  
+            localStorage.setItem('period_selection_'+window.location.pathname.split('/')[1], val)
+        }
     }
 
     useEffect(() => {
@@ -31,22 +31,24 @@ export default function PeriodSelector({ setter, current, disableCache = false }
       }, []);
 
     return (
-        <div className="flex gap-2 grow-0 text-sm sm:text-[16px]">
-            <p>Showing stats for:</p>
-            {periods.map((p, i) => (
-                <div key={`period_setter_${p}`}>
-                    <button 
-                        className={`period-selector ${p === current ? 'color-fg' : 'color-fg-secondary'} ${i !== periods.length - 1 ? 'pr-2' : ''}`}
+        <div className="flex flex-wrap items-center gap-2 grow-0 text-sm sm:text-[16px]">
+            <p className="text-(--color-fg-secondary) pr-1">Showing stats for:</p>
+            <div className="flex flex-wrap gap-1 rounded-full bg-(--color-bg-tertiary)/40 p-1">
+                {periods.map((p) => (
+                    <button
+                        key={`period_setter_${p}`}
+                        className={`period-selector rounded-full px-3 py-1 transition-colors ${
+                            p === current
+                                ? "bg-(--color-bg-tertiary) color-fg"
+                                : "color-fg-secondary hover:text-(--color-fg)"
+                        }`}
                         onClick={() => setPeriod(p)}
                         disabled={p === current}
                     >
                         {periodDisplay(p)}
                     </button>
-                    <span className="color-fg-secondary">
-                        {i !== periods.length - 1 ? '|' : ''}
-                    </span>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }

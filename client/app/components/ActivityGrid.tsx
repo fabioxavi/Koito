@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useTheme } from "~/hooks/useTheme";
 import ActivityOptsSelector from "./ActivityOptsSelector";
 import type { Theme } from "~/styles/themes.css";
+import Card from "./Card";
 
 function getPrimaryColor(theme: Theme): string {
   const value = theme.primary;
@@ -68,17 +69,17 @@ export default function ActivityGrid({
 
   if (isPending) {
     return (
-      <div className="w-[350px]">
+      <Card className="w-[350px]">
         <h3>Activity</h3>
         <p>Loading...</p>
-      </div>
+      </Card>
     );
   } else if (isError) {
     return (
-      <div className="w-[350px]">
+      <Card className="w-[350px]">
         <h3>Activity</h3>
         <p className="error">Error: {error.message}</p>
-      </div>
+      </Card>
     );
   }
 
@@ -140,7 +141,7 @@ export default function ActivityGrid({
   }
 
   return (
-    <div className="flex flex-col items-start">
+    <Card className="flex flex-col items-start w-full">
       <h3>Activity</h3>
       {configurable ? (
         <ActivityOptsSelector
@@ -178,7 +179,7 @@ export default function ActivityGrid({
                             color,
                             getDarkenAmount(item.listens, 100)
                           )
-                        : "var(--color-bg-secondary)",
+                        : "var(--color-bg)",
                   }}
                   className={`w-[10px] sm:w-[12px] h-[10px] sm:h-[12px] rounded-[2px] md:rounded-[3px] ${
                     item.listens > 0
@@ -191,6 +192,6 @@ export default function ActivityGrid({
           ))}
         </div>
       ))}
-    </div>
+    </Card>
   );
 }

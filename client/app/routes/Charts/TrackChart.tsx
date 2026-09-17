@@ -2,6 +2,7 @@ import TopItemList from "~/components/TopItemList";
 import ChartLayout from "./ChartLayout";
 import { useLoaderData, type LoaderFunctionArgs } from "react-router";
 import { type Track, type PaginatedResponse, type Ranked } from "api/api";
+import Card from "~/components/Card";
 
 export async function clientLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
@@ -43,13 +44,9 @@ export default function TrackChart() {
               Next
             </button>
           </div>
-          <TopItemList
-            ranked
-            separators
-            data={data}
-            className="w-11/12 sm:w-[600px]"
-            type="track"
-          />
+          <Card className="w-11/12 sm:w-[600px]">
+            <TopItemList ranked data={data} type="track" />
+          </Card>
           <div className="flex gap-15 mx-auto">
             <button className="default" onClick={onPrev} disabled={page === 0}>
               Prev

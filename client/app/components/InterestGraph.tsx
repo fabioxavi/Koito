@@ -4,6 +4,7 @@ import { useTheme } from "~/hooks/useTheme";
 import type { Theme } from "~/styles/themes.css";
 import { Area, AreaChart } from "recharts";
 import { RechartsDevtools } from "@recharts/devtools";
+import Card from "./Card";
 
 function getPrimaryColor(theme: Theme): string {
   const value = theme.primary;
@@ -48,17 +49,17 @@ export default function InterestGraph({
 
   if (isPending) {
     return (
-      <div className="w-[350px] sm:w-[500px]">
+      <Card className="w-full">
         <h3>Interest over time</h3>
         <p>Loading...</p>
-      </div>
+      </Card>
     );
   } else if (isError) {
     return (
-      <div className="w-[350px] sm:w-[500px]">
+      <Card className="w-full">
         <h3>Interest over time</h3>
         <p className="error">Error: {error.message}</p>
-      </div>
+      </Card>
     );
   }
 
@@ -67,7 +68,7 @@ export default function InterestGraph({
   // so I think I just have to remove it for now.
 
   return (
-    <div className="flex flex-col items-start w-full max-w-[335px] sm:max-w-[500px]">
+    <Card className="flex flex-col items-start w-full">
       <h3>Interest over time</h3>
       <AreaChart
         style={{
@@ -107,6 +108,6 @@ export default function InterestGraph({
           style={{ filter: `drop-shadow(0px 0px 0px ${color})` }}
         />
       </AreaChart>
-    </div>
+    </Card>
   );
 }

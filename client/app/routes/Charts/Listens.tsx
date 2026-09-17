@@ -5,6 +5,7 @@ import { timeSince } from "~/utils/utils";
 import ArtistLinks from "~/components/ArtistLinks";
 import { useState } from "react";
 import { useAppContext } from "~/providers/AppProvider";
+import Card from "~/components/Card";
 
 export async function clientLoader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url);
@@ -59,11 +60,12 @@ export default function Listens() {
                 Next
             </button>
             </div>
-                <table className="-ml-4">
+                <Card className="w-11/12 sm:w-[600px] mx-auto">
+                <table className="-ml-1.5 w-full">
                     <tbody>
                         {listens.map((item) => (
-                            <tr key={`last_listen_${item.time}`} className="group hover:bg-[--color-bg-secondary]">
-                                <td className="w-[17px] pr-2 align-middle">
+                            <tr key={`last_listen_${item.time}`} className="group hover:bg-(--color-bg-tertiary)/60 rounded-lg">
+                                <td className="w-[17px] pr-2 py-1 align-middle rounded-l-lg">
                                     <button
                                         onClick={() => handleDelete(item)}
                                         className="opacity-0 group-hover:opacity-100 transition-opacity text-(--color-fg-tertiary) hover:text-(--color-error)"
@@ -74,12 +76,12 @@ export default function Listens() {
                                     </button>
                                 </td>
                                 <td
-                                    className="color-fg-tertiary pr-2 sm:pr-4 text-sm whitespace-nowrap w-0"
+                                    className="color-fg-tertiary pr-2 sm:pr-4 py-1 text-sm whitespace-nowrap w-0"
                                     title={new Date(item.time).toString()}
                                 >
                                     {timeSince(new Date(item.time))}
                                 </td>
-                                <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px]">
+                                <td className="text-ellipsis overflow-hidden max-w-[400px] sm:max-w-[600px] py-1 rounded-r-lg">
                                             <ArtistLinks artists={item.track.artists} /> –{' '}
                                     <Link
                                         className="hover:text-[--color-fg-secondary]"
@@ -92,6 +94,7 @@ export default function Listens() {
                         ))}
                     </tbody>
                 </table>
+                </Card>
             <div className="flex gap-15 mx-auto">
                 <button className="default" onClick={onPrev} disabled={page === 0}>
                 Prev

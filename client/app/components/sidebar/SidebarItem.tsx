@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Popup from "../Popup";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 interface Props {
     name: string;
@@ -13,10 +13,12 @@ interface Props {
     externalLink?: boolean
     /* true if the keyhint is an icon and not text */
     icon?: boolean
+    end?: boolean
 }
 
-export default function SidebarItem({ externalLink, space, keyHint, name, to, children, modal, onClick, icon }: Props) {
+export default function SidebarItem({ externalLink, space, keyHint, name, to, children, modal, onClick, icon, end }: Props) {
     const classes = "hover:cursor-pointer hover:bg-(--color-bg-tertiary) transition duration-100 rounded-md p-2 inline-block";
+    const activeClasses = "bg-(--color-bg-tertiary) color-fg";
 
     const popupInner = keyHint ? (
         <div className="flex items-center gap-2">
@@ -37,7 +39,12 @@ export default function SidebarItem({ externalLink, space, keyHint, name, to, ch
         <>
             <Popup position="right" space={space ?? 20} inner={popupInner}>
                 {to ? (
-                    <Link target={externalLink ? "_blank" : ""} className={classes} to={to}>{children}</Link>
+                    <NavLink
+                        target={externalLink ? "_blank" : ""}
+                        className={({ isActive }) => `${classes} ${isActive && !externalLink ? activeClasses : ""}`}
+                        to={to}
+                        end={end}
+                    >{children}</NavLink>
                 ) : (
                     <a className={classes} onClick={() => onClick()}>{children}</a>
                 )}

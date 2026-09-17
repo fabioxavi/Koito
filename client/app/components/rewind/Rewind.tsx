@@ -1,6 +1,7 @@
 import { imageUrl, type RewindStats } from "api/api";
 import RewindStatText from "./RewindStatText";
 import { RewindTopItem } from "./RewindTopItem";
+import Card from "../Card";
 
 interface Props {
   stats: RewindStats;
@@ -19,7 +20,7 @@ export default function Rewind(props: Props) {
     return <p>Not enough data exists to create a Rewind for this period :(</p>;
   }
   return (
-    <div className="flex flex-col gap-7">
+    <Card className="flex flex-col gap-7 w-full">
       <h2>{props.stats.title}</h2>
       <RewindTopItem
         title="Top Artist"
@@ -74,6 +75,6 @@ export default function Rewind(props: Props) {
           text="New artists"
         />
       </div>
-    </div>
+    </Card>
   );
 }

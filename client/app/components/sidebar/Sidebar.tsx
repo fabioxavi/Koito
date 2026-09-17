@@ -36,6 +36,7 @@ export default function Sidebar() {
         <SidebarItem
           space={10}
           to="/"
+          end
           name="Home"
           onClick={() => {}}
           modal={<></>}
