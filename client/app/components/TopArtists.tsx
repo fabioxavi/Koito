@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import TopListSkeleton from "./skeletons/TopListSkeleton";
 import TopItemList from "./TopItemList";
 import Card from "./Card";
+import FeaturedTopItem from "./FeaturedTopItem";
 
 interface Props {
   limit: number;
@@ -46,7 +47,14 @@ export default function TopArtists(props: Props) {
         <Link to={`/chart/top-artists?period=${props.period}`}>{header}</Link>
       </h3>
       <div>
-        <TopItemList type="artist" data={data} />
+        {data.items.length > 0 && (
+          <div className="mb-4">
+            <FeaturedTopItem item={data.items[0]} type="artist" />
+          </div>
+        )}
+        {data.items.length > 1 && (
+          <TopItemList type="artist" data={{ ...data, items: data.items.slice(1) }} />
+        )}
         {data.items.length < 1 ? "Nothing to show" : ""}
       </div>
     </Card>

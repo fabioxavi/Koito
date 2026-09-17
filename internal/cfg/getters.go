@@ -138,6 +138,30 @@ func LastFMApiKey() string {
 	return globalConfig.lastfmApiKey
 }
 
+func SetlistFmApiKey() string {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.setlistfmApiKey
+}
+
+func SpotifyEnabled() bool {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.spotifyEnabled
+}
+
+func SpotifyClientId() string {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.spotifyClientId
+}
+
+func SpotifyClientSecret() string {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.spotifyClientSecret
+}
+
 func SkipImport() bool {
 	lock.RLock()
 	defer lock.RUnlock()

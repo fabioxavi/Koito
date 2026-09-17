@@ -1,0 +1,25 @@
+services:
+  koito-test:
+    build: .
+    container_name: koito_fabioxavi_test
+    environment:
+      # Aqui dizemos para ele usar a base de dados de teste (koitodb_test)
+      # Nota: Se o koito_db estiver na mesma rede Docker, usamos o nome do container
+      # Se estiverem em redes separadas, usamos o IP do servidor (192.168.1.110)
+      KOITO_DATABASE_URL: "postgres://postgres:JoaoPedro2026@192.168.1.110:5432/koitodb"
+      KOITO_ALLOWED_HOSTS: "100.91.8.117:4111,192.168.1.110:4111,localhost,127.0.0.1"
+      # Spotify API credentials for image search
+      # Get these from https://developer.spotify.com/dashboard
+      KOITO_SPOTIFY_CLIENT_ID: "476a9a4c9df2489a928eddcf1c1033f6"
+      KOITO_SPOTIFY_CLIENT_SECRET: "b13f8259cbe840dfb1b007bd1e723660"
+      # Last.fm API key for artist image search
+      # Get from https://www.last.fm/api/account/create
+      KOITO_LASTFM_API_KEY: "5e8ff7223f55d25a9cea8c841ee5b854"
+      # Setlist.fm API key for live shows
+      # Get from https://www.setlist.fm/settings/api
+      KOITO_SETLISTFM_API_KEY: "mnY8kNvyOpuhmJkxzCSRzUv86hZSwuIotS8h"
+    ports:
+      - "4111:4110"  # Acedes ao teste pela porta 4111
+    volumes:
+      - /koito_test_config:/etc/koito
+    restart: unless-stopped

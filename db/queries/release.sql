@@ -18,6 +18,17 @@ WHERE musicbrainz_id = $1 LIMIT 1;
 SELECT * FROM releases
 WHERE image = $1 LIMIT 1;
 
+-- name: GetAllReleasesFromArtist :many
+SELECT r.*
+FROM releases_with_title r
+JOIN artist_releases ar ON r.id = ar.release_id
+WHERE ar.artist_id = $1;
+
+-- name: GetArtistReleaseAssociations :many
+SELECT ar.release_id, ar.is_primary
+FROM artist_releases ar
+WHERE ar.artist_id = $1;
+
 -- name: GetReleaseByArtistAndTitle :one
 SELECT r.*
 FROM releases_with_title r

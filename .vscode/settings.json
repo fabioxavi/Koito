@@ -1,3 +1,12 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "chat.tools.terminal.autoApprove": {
+        "npm run typecheck": true
+    },
+    "typescript.preferences.includePackageJsonAutoImports": "auto",
+    "typescript.preferences.preferTypeOnlyAutoImports": true,
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.suggest.autoImports": true,
+    "typescript.preferences.jsx": "react-jsx",
+    "typescript.tsdk": "client/node_modules/typescript/lib"
 }

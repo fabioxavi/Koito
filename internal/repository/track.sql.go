@@ -153,6 +153,37 @@ func (q *Queries) GetAllTracksFromArtist(ctx context.Context, artistID int32) ([
 	return items, nil
 }
 
+const getArtistTrackAssociations = `-- name: GetArtistTrackAssociations :many
+SELECT at.track_id, at.is_primary
+FROM artist_tracks at
+WHERE at.artist_id = $1
+`
+
+type GetArtistTrackAssociationsRow struct {
+	TrackID   int32
+	IsPrimary bool
+}
+
+func (q *Queries) GetArtistTrackAssociations(ctx context.Context, artistID int32) ([]GetArtistTrackAssociationsRow, error) {
+	rows, err := q.db.Query(ctx, getArtistTrackAssociations, artistID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetArtistTrackAssociationsRow
+	for rows.Next() {
+		var i GetArtistTrackAssociationsRow
+		if err := rows.Scan(&i.TrackID, &i.IsPrimary); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getTopTracksByArtistPaginated = `-- name: GetTopTracksByArtistPaginated :many
 SELECT
     x.track_id AS id,

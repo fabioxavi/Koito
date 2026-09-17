@@ -141,6 +141,71 @@ func (q *Queries) GetRelease(ctx context.Context, id int32) (GetReleaseRow, erro
 	return i, err
 }
 
+const getAllReleasesFromArtist = `-- name: GetAllReleasesFromArtist :many
+SELECT r.id, r.musicbrainz_id, r.image, r.various_artists, r.image_source, r.title
+FROM releases_with_title r
+JOIN artist_releases ar ON r.id = ar.release_id
+WHERE ar.artist_id = $1
+`
+
+func (q *Queries) GetAllReleasesFromArtist(ctx context.Context, artistID int32) ([]ReleasesWithTitle, error) {
+	rows, err := q.db.Query(ctx, getAllReleasesFromArtist, artistID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ReleasesWithTitle
+	for rows.Next() {
+		var i ReleasesWithTitle
+		if err := rows.Scan(
+			&i.ID,
+			&i.MusicBrainzID,
+			&i.Image,
+			&i.VariousArtists,
+			&i.ImageSource,
+			&i.Title,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getArtistReleaseAssociations = `-- name: GetArtistReleaseAssociations :many
+SELECT ar.release_id, ar.is_primary
+FROM artist_releases ar
+WHERE ar.artist_id = $1
+`
+
+type GetArtistReleaseAssociationsRow struct {
+	ReleaseID int32
+	IsPrimary bool
+}
+
+func (q *Queries) GetArtistReleaseAssociations(ctx context.Context, artistID int32) ([]GetArtistReleaseAssociationsRow, error) {
+	rows, err := q.db.Query(ctx, getArtistReleaseAssociations, artistID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetArtistReleaseAssociationsRow
+	for rows.Next() {
+		var i GetArtistReleaseAssociationsRow
+		if err := rows.Scan(&i.ReleaseID, &i.IsPrimary); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getReleaseAllTimeRank = `-- name: GetReleaseAllTimeRank :one
 SELECT
     release_id,

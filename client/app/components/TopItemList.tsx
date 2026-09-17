@@ -81,7 +81,7 @@ function ItemCard({
           <Link to={`/album/${album.id}`} className="shrink-0">
             <img
               loading="lazy"
-              src={imageUrl(album.image, "small")}
+              src={imageUrl(album.image, "medium")}
               alt={album.title}
               className="w-12 h-12 rounded-lg object-cover"
             />
@@ -130,7 +130,7 @@ function ItemCard({
           <Link to={`/track/${track.id}`} className="shrink-0">
             <img
               loading="lazy"
-              src={imageUrl(track.image, "small")}
+              src={imageUrl(track.image, "medium")}
               alt={track.title}
               className="w-12 h-12 rounded-lg object-cover"
             />

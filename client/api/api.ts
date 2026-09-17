@@ -105,6 +105,24 @@ function search(q: string): Promise<SearchResponse> {
   );
 }
 
+interface ImageResult {
+  url: string;
+  source: string;
+  width?: number;
+  height?: number;
+}
+
+interface SearchImagesResponse {
+  images: ImageResult[];
+}
+
+function searchImages(q: string, type: string): Promise<SearchImagesResponse> {
+  const params = new URLSearchParams({ q, type });
+  return fetch(`/apis/web/v1/search-images?${params.toString()}`).then(
+    (r) => r.json() as Promise<SearchImagesResponse>
+  );
+}
+
 function imageUrl(id: string, size: string) {
   if (!id) {
     id = "default";
@@ -146,6 +164,25 @@ function mergeArtists(
       method: "POST",
     }
   );
+}
+
+function splitArtists(
+  from: number,
+  to: number[],
+  createMissing: boolean,
+  newArtistNames: string[] = []
+): Promise<Response> {
+  const form = new URLSearchParams();
+  form.append("from_id", String(from));
+  form.append("to_ids", to.join(","));
+  form.append("create_missing", String(createMissing));
+  if (newArtistNames.length > 0) {
+    form.append("new_artist_names", newArtistNames.join("|"));
+  }
+  return fetch(`/apis/web/v1/split/artists`, {
+    method: "POST",
+    body: form,
+  });
 }
 function login(
   username: string,
@@ -331,10 +368,13 @@ export {
   getInterest,
   getStats,
   search,
+  searchImages,
   replaceImage,
+  type ImageResult,
   mergeTracks,
   mergeAlbums,
   mergeArtists,
+  splitArtists,
   imageUrl,
   login,
   logout,

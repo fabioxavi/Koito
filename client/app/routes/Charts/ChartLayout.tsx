@@ -49,7 +49,7 @@ export default function ChartLayout<T>({
     });
   }, [data]);
 
-  const period = currentParams.get("period") ?? "day";
+  const period = currentParams.get("period") ?? "all_time";
   const year = currentParams.get("year");
   const month = currentParams.get("month");
   const week = currentParams.get("week");

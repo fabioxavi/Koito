@@ -20,7 +20,7 @@ export async function clientLoader({ params }: LoaderFunctionArgs) {
 
 export default function Album() {
   const album = useLoaderData() as Album;
-  const [period, setPeriod] = useState("week");
+  const [period, setPeriod] = useState("all_time");
 
   console.log(album);
 
@@ -28,6 +28,7 @@ export default function Album() {
     <MediaLayout
       type="Album"
       title={album.title}
+      searchQuery={`${album.title} ${album.artists?.[0]?.name ?? ""}`.trim()}
       img={album.image}
       id={album.id}
       rank={album.all_time_rank}

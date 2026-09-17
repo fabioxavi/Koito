@@ -27,6 +27,11 @@ FROM tracks_with_title t
 JOIN artist_tracks at ON t.id = at.track_id
 WHERE at.artist_id = $1;
 
+-- name: GetArtistTrackAssociations :many
+SELECT at.track_id, at.is_primary
+FROM artist_tracks at
+WHERE at.artist_id = $1;
+
 -- name: GetTrackByTrackInfo :one
 SELECT t.*
 FROM tracks_with_title t

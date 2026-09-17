@@ -1,13 +1,17 @@
-import TopItemList from "~/components/TopItemList";
+import ChartCard from "~/components/ChartCard";
 import ChartLayout from "./ChartLayout";
 import { useLoaderData, type LoaderFunctionArgs } from "react-router";
 import { type Track, type PaginatedResponse, type Ranked } from "api/api";
-import Card from "~/components/Card";
 
 export async function clientLoader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const page = url.searchParams.get("page") || "0";
   url.searchParams.set("page", page);
+
+  // Default to all_time period if no period/timeframe is specified
+  if (!url.searchParams.get("period") && !url.searchParams.get("year") && !url.searchParams.get("month") && !url.searchParams.get("week")) {
+    url.searchParams.set("period", "all_time");
+  }
 
   const res = await fetch(
     `/apis/web/v1/top-tracks?${url.searchParams.toString()}`
@@ -44,9 +48,16 @@ export default function TrackChart() {
               Next
             </button>
           </div>
-          <Card className="w-11/12 sm:w-[600px]">
-            <TopItemList ranked data={data} type="track" />
-          </Card>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 w-full">
+            {data.items.map((rankedTrack, index) => (
+              <ChartCard
+                key={rankedTrack.item.id}
+                item={rankedTrack}
+                index={index}
+                type="track"
+              />
+            ))}
+          </div>
           <div className="flex gap-15 mx-auto">
             <button className="default" onClick={onPrev} disabled={page === 0}>
               Prev

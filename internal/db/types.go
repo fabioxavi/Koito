@@ -55,3 +55,24 @@ type InterestBucket struct {
 	BucketEnd   time.Time `json:"bucket_end"`
 	ListenCount int64     `json:"listen_count"`
 }
+
+type DuplicateListen struct {
+	TrackID         int32     `json:"track_id"`
+	TrackTitle      string    `json:"track_title"`
+	Artists         []models.SimpleArtist `json:"artists"`
+	PreviousListen  time.Time `json:"previous_listen"`
+	DuplicateListen time.Time `json:"duplicate_listen"`
+	DurationSeconds int32     `json:"duration_seconds"`
+	DiffSeconds     int32     `json:"diff_seconds"`
+}
+
+type ItemWithoutListens struct {
+	ID   int32  `json:"id"`
+	Name string `json:"name"`
+}
+
+type CleanModeCandidates struct {
+	Artists []ItemWithoutListens `json:"artists"`
+	Albums  []ItemWithoutListens `json:"albums"`
+	Tracks  []ItemWithoutListens `json:"tracks"`
+}

@@ -13,6 +13,7 @@ type Artist struct {
 	FirstListen  int64      `json:"first_listen"`
 	IsPrimary    bool       `json:"is_primary,omitempty"`
 	AllTimeRank  int64      `json:"all_time_rank"`
+	LiveCount    int32    `json:"liveCount"`
 }
 
 type SimpleArtist struct {

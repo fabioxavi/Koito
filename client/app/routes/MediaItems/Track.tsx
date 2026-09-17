@@ -26,12 +26,13 @@ export async function clientLoader({ params }: LoaderFunctionArgs) {
 
 export default function Track() {
   const { track, album } = useLoaderData();
-  const [period, setPeriod] = useState("week");
+  const [period, setPeriod] = useState("all_time");
 
   return (
     <MediaLayout
       type="Track"
       title={track.title}
+      searchQuery={`${album.title} ${track.artists?.[0]?.name ?? ""}`.trim()}
       img={track.image}
       id={track.id}
       rank={track.all_time_rank}

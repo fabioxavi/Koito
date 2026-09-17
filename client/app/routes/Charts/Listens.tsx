@@ -12,6 +12,11 @@ export async function clientLoader({ request }: LoaderFunctionArgs) {
     const page = url.searchParams.get("page") || "0";
     url.searchParams.set('page', page)
 
+    // Default to all_time period if no period/timeframe is specified
+    if (!url.searchParams.get("period") && !url.searchParams.get("year") && !url.searchParams.get("month") && !url.searchParams.get("week")) {
+        url.searchParams.set("period", "all_time");
+    }
+
     const res = await fetch(
         `/apis/web/v1/listens?${url.searchParams.toString()}`
     );

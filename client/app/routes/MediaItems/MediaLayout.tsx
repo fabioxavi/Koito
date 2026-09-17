@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { average } from "color.js";
 import { imageUrl, type SearchResponse } from "api/api";
 import ImageDropHandler from "~/components/ImageDropHandler";
-import { Edit, ImageIcon, Merge, Plus, Trash } from "lucide-react";
+import { Edit, ImageIcon, Merge, Plus, Trash, Scissors } from "lucide-react";
 import { useAppContext } from "~/providers/AppProvider";
 import MergeModal from "~/components/modals/MergeModal";
+import SplitModal from "~/components/modals/SplitModal";
 import ImageReplaceModal from "~/components/modals/ImageReplaceModal";
 import DeleteModal from "~/components/modals/DeleteModal";
 import RenameModal from "~/components/modals/EditModal/EditModal";
@@ -26,6 +27,7 @@ export type MergeSearchCleanerFunc = (
 interface Props {
   type: "Track" | "Album" | "Artist";
   title: string;
+  searchQuery?: string;
   img: string;
   id: number;
   rank: number;
@@ -35,11 +37,13 @@ interface Props {
   mergeCleanerFunc: MergeSearchCleanerFunc;
   children: React.ReactNode;
   subContent: React.ReactNode;
+  imageChildren?: React.ReactNode;
 }
 
 export default function MediaLayout(props: Props) {
   const [bgColor, setBgColor] = useState<string>("(--color-bg)");
   const [mergeModalOpen, setMergeModalOpen] = useState(false);
+  const [splitModalOpen, setSplitModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [renameModalOpen, setRenameModalOpen] = useState(false);
@@ -70,6 +74,10 @@ export default function MediaLayout(props: Props) {
 
   console.log("MBZ:", props.musicbrainzId);
 
+  const closeSplitModal = () => {
+    setSplitModalOpen(false);
+  };
+
   return (
     <main
       className="w-full flex flex-col flex-grow"
@@ -87,13 +95,14 @@ export default function MediaLayout(props: Props) {
       <meta name="description" content={title} />
       <div className="w-19/20 mx-auto pt-12">
         <div className="flex gap-8 flex-wrap md:flex-nowrap relative">
-          <div className="flex flex-col justify-around">
+          <div className="flex flex-col justify-around relative">
             <img
               style={{ zIndex: 5 }}
               src={imageUrl(props.img, "large")}
               alt={props.title}
               className="md:min-w-[385px] w-[220px] h-auto rounded-xl object-cover shadow-lg shadow-black/40"
             />
+            {props.imageChildren}
           </div>
           <div className="flex flex-col items-start gap-1">
             <span className="header-font text-xs font-semibold tracking-wide uppercase rounded-full bg-(--color-bg-tertiary) text-(--color-fg-secondary) px-3 py-1">
@@ -158,6 +167,15 @@ export default function MediaLayout(props: Props) {
                     <ImageIcon size={iconSize} />
                   </button>
                 )}
+                {props.type === "Artist" && (
+                  <button
+                    title="Split Artist"
+                    className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
+                    onClick={() => setSplitModalOpen(true)}
+                  >
+                    <Scissors size={iconSize} />
+                  </button>
+                )}
                 <button
                   title="Merge Items"
                   className="hover:cursor-pointer hover:bg-(--color-bg-tertiary) rounded-lg p-2 transition-colors"
@@ -183,7 +201,16 @@ export default function MediaLayout(props: Props) {
                   setOpen={setImageModalOpen}
                   id={props.imgItemId}
                   musicbrainzId={props.musicbrainzId}
+                  initialSearchQuery={props.searchQuery}
                   type={props.type === "Track" ? "Album" : props.type}
+                />
+                <SplitModal
+                  currentTitle={props.title}
+                  splitCleanerFunc={props.mergeCleanerFunc}
+                  type={props.type}
+                  currentId={props.id}
+                  open={splitModalOpen}
+                  setOpen={setSplitModalOpen}
                 />
                 <MergeModal
                   currentTitle={props.title}
