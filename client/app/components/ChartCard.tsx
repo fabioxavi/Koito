@@ -104,6 +104,7 @@ export default function ChartCard<T extends Ranked<ChartItem>>({
     }
     case "artist": {
       const artist = data as Artist;
+      const liveCount = (artist as any).liveCount;
       return (
         <div className="flex flex-col items-center bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200">
           <div className="relative mb-3">
@@ -114,6 +115,14 @@ export default function ChartCard<T extends Ranked<ChartItem>>({
                 alt={artist.name}
                 className="w-32 h-32 object-cover rounded-lg"
               />
+              {liveCount > 0 && (
+                <div
+                  title={`Visto ao vivo ${liveCount} vezes`}
+                  className="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg border-2 border-white text-sm z-10"
+                >
+                  {liveCount}
+                </div>
+              )}
             </Link>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 bg-black/60 text-white text-sm font-bold px-3 py-1 rounded-full">
               #{rank}

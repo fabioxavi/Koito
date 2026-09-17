@@ -158,6 +158,7 @@ function ItemCard({
     }
     case "artist": {
       const artist = item as Artist;
+      const liveCount = (artist as any).liveCount;
       return (
         <Link
           className={rowClasses + " hover:text-(--color-fg-secondary)"}
@@ -168,12 +169,22 @@ function ItemCard({
               {rank}
             </div>
           )}
-          <img
-            loading="lazy"
-            src={imageUrl(artist.image, "small")}
-            alt={artist.name}
-            className="w-12 h-12 rounded-full object-cover shrink-0"
-          />
+          <div className="relative shrink-0">
+            <img
+              loading="lazy"
+              src={imageUrl(artist.image, "small")}
+              alt={artist.name}
+              className="w-12 h-12 rounded-full object-cover"
+            />
+            {liveCount > 0 && (
+              <div
+                title={`Visto ao vivo ${liveCount} vezes`}
+                className="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full w-4 h-4 flex items-center justify-center font-bold border border-white text-[9px] z-10"
+              >
+                {liveCount}
+              </div>
+            )}
+          </div>
           <div className="min-w-0 flex-1">
             <span className="text-sm font-medium block truncate">
               {artist.name}
