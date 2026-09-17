@@ -13,6 +13,16 @@ import (
 	"github.com/gabehf/koito/internal/repository"
 )
 
+type duplicateListenRow struct {
+	TrackID         int32
+	TrackTitle      string
+	Artists         []byte
+	PreviousListen  time.Time
+	DuplicateListen time.Time
+	DurationSeconds int32
+	DiffSeconds     int32
+}
+
 func (d *Psql) GetListensPaginated(ctx context.Context, opts db.GetItemsOpts) (*db.PaginatedResponse[*models.Listen], error) {
 	l := logger.FromContext(ctx)
 	offset := (opts.Page - 1) * opts.Limit
@@ -207,4 +217,77 @@ func (d *Psql) DeleteListen(ctx context.Context, trackId int32, listenedAt time.
 		TrackID:    trackId,
 		ListenedAt: listenedAt,
 	})
+}
+
+func (d *Psql) GetDuplicateListens(ctx context.Context, opts db.GetItemsOpts) ([]db.DuplicateListen, error) {
+	t1, t2 := db.TimeframeToTimeRange(opts.Timeframe)
+	limit := opts.Limit
+	if limit <= 0 {
+		limit = DefaultItemsPerPage
+	}
+	offset := (opts.Page - 1) * limit
+	if opts.Page <= 0 {
+		offset = 0
+	}
+
+	const query = `
+		SELECT
+			t.id AS track_id,
+			t.title AS track_title,
+			get_artists_for_track(t.id) AS artists,
+			l1.listened_at AS previous_listen,
+			l2.listened_at AS duplicate_listen,
+			t.duration AS duration_seconds,
+			EXTRACT(EPOCH FROM (l2.listened_at - l1.listened_at))::int AS diff_seconds
+		FROM listens l1
+		JOIN listens l2 ON l1.track_id = l2.track_id AND l2.listened_at > l1.listened_at
+		JOIN tracks_with_title t ON l1.track_id = t.id
+		WHERE l1.listened_at BETWEEN $1 AND $2
+			AND l2.listened_at BETWEEN $1 AND $2
+			AND EXTRACT(EPOCH FROM (l2.listened_at - l1.listened_at)) < t.duration
+		ORDER BY l2.listened_at DESC
+		LIMIT $3 OFFSET $4;
+	`
+
+	rows, err := d.conn.Query(ctx, query, t1, t2, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("GetDuplicateListens: query failed: %w", err)
+	}
+	defer rows.Close()
+
+	duplicates := make([]db.DuplicateListen, 0, limit)
+	for rows.Next() {
+		var row duplicateListenRow
+		if err := rows.Scan(
+			&row.TrackID,
+			&row.TrackTitle,
+			&row.Artists,
+			&row.PreviousListen,
+			&row.DuplicateListen,
+			&row.DurationSeconds,
+			&row.DiffSeconds,
+		); err != nil {
+			return nil, fmt.Errorf("GetDuplicateListens: scan failed: %w", err)
+		}
+
+		var artists []models.SimpleArtist
+		if err := json.Unmarshal(row.Artists, &artists); err != nil {
+			return nil, fmt.Errorf("GetDuplicateListens: artists unmarshal failed: %w", err)
+		}
+		duplicates = append(duplicates, db.DuplicateListen{
+			TrackID:         row.TrackID,
+			TrackTitle:      row.TrackTitle,
+			Artists:         artists,
+			PreviousListen:  row.PreviousListen,
+			DuplicateListen: row.DuplicateListen,
+			DurationSeconds: row.DurationSeconds,
+			DiffSeconds:     row.DiffSeconds,
+		})
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("GetDuplicateListens: rows iteration failed: %w", err)
+	}
+
+	return duplicates, nil
 }

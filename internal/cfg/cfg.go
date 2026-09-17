@@ -39,6 +39,9 @@ const (
 	SUBSONIC_URL_ENV               = "KOITO_SUBSONIC_URL"
 	SUBSONIC_PARAMS_ENV            = "KOITO_SUBSONIC_PARAMS"
 	LASTFM_API_KEY_ENV             = "KOITO_LASTFM_API_KEY"
+	SETLISTFM_API_KEY_ENV          = "KOITO_SETLISTFM_API_KEY"
+	SPOTIFY_CLIENT_ID_ENV          = "KOITO_SPOTIFY_CLIENT_ID"
+	SPOTIFY_CLIENT_SECRET_ENV      = "KOITO_SPOTIFY_CLIENT_SECRET"
 	SKIP_IMPORT_ENV                = "KOITO_SKIP_IMPORT"
 	ALLOWED_HOSTS_ENV              = "KOITO_ALLOWED_HOSTS"
 	CORS_ORIGINS_ENV               = "KOITO_CORS_ALLOWED_ORIGINS"
@@ -75,6 +78,10 @@ type config struct {
 	subsonicUrl            string
 	subsonicParams         string
 	lastfmApiKey           string
+	setlistfmApiKey        string
+	spotifyClientId        string
+	spotifyClientSecret    string
+	spotifyEnabled         bool
 	subsonicEnabled        bool
 	skipImport             bool
 	fetchImageDuringImport bool
@@ -170,6 +177,10 @@ func loadConfig(getenv func(string) string, version string) (*config, error) {
 		return nil, fmt.Errorf("loadConfig: invalid configuration: both %s and %s must be set in order to use subsonic image fetching", SUBSONIC_URL_ENV, SUBSONIC_PARAMS_ENV)
 	}
 	cfg.lastfmApiKey = getenv(LASTFM_API_KEY_ENV)
+	cfg.setlistfmApiKey = getenv(SETLISTFM_API_KEY_ENV)
+	cfg.spotifyClientId = getenv(SPOTIFY_CLIENT_ID_ENV)
+	cfg.spotifyClientSecret = getenv(SPOTIFY_CLIENT_SECRET_ENV)
+	cfg.spotifyEnabled = cfg.spotifyClientId != "" && cfg.spotifyClientSecret != ""
 	cfg.skipImport = parseBool(getenv(SKIP_IMPORT_ENV))
 
 	cfg.userAgent = fmt.Sprintf("Koito %s (contact@koito.io)", version)

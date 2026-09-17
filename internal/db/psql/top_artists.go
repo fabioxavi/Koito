@@ -30,16 +30,24 @@ func (d *Psql) GetTopArtistsPaginated(ctx context.Context, opts db.GetItemsOpts)
 	}
 	rgs := make([]db.RankedItem[*models.Artist], len(rows))
 	for i, row := range rows {
+		var liveCount int
+		_ = d.conn.QueryRow(ctx, "SELECT COUNT(*) FROM live_show_artists WHERE koito_artist_id = $1", row.ID).Scan(&liveCount)
 		t := &models.Artist{
 			Name:        row.Name,
 			MbzID:       row.MusicBrainzID,
 			ID:          row.ID,
 			Image:       row.Image,
 			ListenCount: row.ListenCount,
-		}
-		rgs[i].Item = t
-		rgs[i].Rank = row.Rank
-	}
+		LiveCount:   int32(liveCount), // Adiciona isto se o struct permitir
+        // Certifica-te que o teu struct models.Artist tem este campo ou usa o map se necessário
+        // Se o models.Artist não tiver LiveCount, podes ter de o adicionar lá primeiro!
+    }
+    rgs[i].Item = t
+    rgs[i].Rank = row.Rank
+    
+    // Se o modelo Artist ainda não tiver o campo LiveCount, 
+    // podes injetar o valor na resposta paginada ou ajustar o modelo.
+}
 	count, err := d.q.CountTopArtists(ctx, repository.CountTopArtistsParams{
 		ListenedAt:   t1,
 		ListenedAt_2: t2,

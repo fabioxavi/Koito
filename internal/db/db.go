@@ -32,6 +32,8 @@ type DB interface {
 	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
 	GetUserByApiKey(ctx context.Context, key string) (*models.User, error)
 	GetInterest(ctx context.Context, opts GetInterestOpts) ([]InterestBucket, error)
+	GetDuplicateListens(ctx context.Context, opts GetItemsOpts) ([]DuplicateListen, error)
+	GetCleanModeCandidates(ctx context.Context) (*CleanModeCandidates, error)
 
 	// Save
 
@@ -100,6 +102,10 @@ type DB interface {
 	MergeTracks(ctx context.Context, fromId, toId int32) error
 	MergeAlbums(ctx context.Context, fromId, toId int32, replaceImage bool) error
 	MergeArtists(ctx context.Context, fromId, toId int32, replaceImage bool) error
+
+	// Split
+
+	SplitArtists(ctx context.Context, fromId int32, toIds []int32, createMissing bool, newArtistNames []string) error
 
 	// Etc
 

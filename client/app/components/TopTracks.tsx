@@ -5,6 +5,7 @@ import { Link } from "react-router";
 import TopListSkeleton from "./skeletons/TopListSkeleton";
 import { useEffect } from "react";
 import TopItemList from "./TopItemList";
+import FeaturedTopItem from "./FeaturedTopItem";
 
 interface Props {
   limit: number;
@@ -59,7 +60,14 @@ const TopTracks = (props: Props) => {
         </Link>
       </h3>
       <div className="max-w-[300px]">
-        <TopItemList type="track" data={data} />
+        {data.items.length > 0 && (
+          <div className="mb-4">
+            <FeaturedTopItem item={data.items[0]} type="track" />
+          </div>
+        )}
+        {data.items.length > 1 && (
+          <TopItemList type="track" data={{ ...data, items: data.items.slice(1) }} />
+        )}
         {data.items.length < 1 ? "Nothing to show" : ""}
       </div>
     </div>

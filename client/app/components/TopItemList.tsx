@@ -77,9 +77,9 @@ function ItemCard({
           <Link to={`/album/${album.id}`}>
             <img
               loading="lazy"
-              src={imageUrl(album.image, "small")}
+              src={imageUrl(album.image, "medium")}
               alt={album.title}
-              className="min-w-[48px]"
+              className="w-12 h-12 min-w-12 object-cover rounded-sm"
             />
           </Link>
           <div>
@@ -117,9 +117,9 @@ function ItemCard({
           <Link to={`/track/${track.id}`}>
             <img
               loading="lazy"
-              src={imageUrl(track.image, "small")}
+              src={imageUrl(track.image, "medium")}
               alt={track.title}
-              className="min-w-[48px]"
+              className="w-12 h-12 min-w-12 object-cover rounded-sm"
             />
           </Link>
           <div>
@@ -155,7 +155,7 @@ function ItemCard({
               loading="lazy"
               src={imageUrl(artist.image, "small")}
               alt={artist.name}
-              className="min-w-[48px]"
+              className="w-12 h-12 min-w-12 object-cover rounded-sm"
             />
             <div>
               <span style={{ fontSize: 14 }}>{artist.name}</span>

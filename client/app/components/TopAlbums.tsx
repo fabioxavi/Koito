@@ -9,6 +9,7 @@ import {
 import { Link } from "react-router";
 import TopListSkeleton from "./skeletons/TopListSkeleton";
 import TopItemList from "./TopItemList";
+import FeaturedTopItem from "./FeaturedTopItem";
 
 interface Props {
   limit: number;
@@ -60,7 +61,14 @@ export default function TopAlbums(props: Props) {
         </Link>
       </h3>
       <div className="max-w-[300px]">
-        <TopItemList type="album" data={data} />
+        {data.items.length > 0 && (
+          <div className="mb-4">
+            <FeaturedTopItem item={data.items[0]} type="album" />
+          </div>
+        )}
+        {data.items.length > 1 && (
+          <TopItemList type="album" data={{ ...data, items: data.items.slice(1) }} />
+        )}
         {data.items.length < 1 ? "Nothing to show" : ""}
       </div>
     </div>

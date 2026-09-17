@@ -72,6 +72,8 @@ SELECT
   x.musicbrainz_id,
   x.image,
   x.listen_count,
+  -- Adicionamos a contagem de shows ao vivo aqui
+  (SELECT COUNT(*) FROM live_show_artists lsa WHERE lsa.koito_artist_id = x.id) AS live_count,
   RANK() OVER (ORDER BY x.listen_count DESC) AS rank
 FROM (
   SELECT

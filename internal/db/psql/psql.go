@@ -89,6 +89,11 @@ func (p *Psql) QueryRow(ctx context.Context, query string, args ...any) pgx.Row 
 	return p.conn.QueryRow(ctx, query, args...)
 }
 
+// Exposes p.conn.Query. Not part of the DB interface this package implements.
+func (p *Psql) Query(ctx context.Context, query string, args ...any) (pgx.Rows, error) {
+	return p.conn.Query(ctx, query, args...)
+}
+
 func (d *Psql) Close(ctx context.Context) {
 	d.conn.Close()
 }
