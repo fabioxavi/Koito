@@ -4,6 +4,7 @@ import ArtistLinks from "~/components/ArtistLinks";
 import { useAppContext } from "~/providers/AppProvider";
 import { useState } from "react";
 import { timeSince } from "~/utils/utils";
+import Card from "~/components/Card";
 
 type DuplicateListen = {
   track_id: number;
@@ -134,13 +135,13 @@ export default function CleanMode() {
   };
 
   return (
-    <main className="pt-8 pb-20 px-5 sm:px-8 sm:pt-12 w-full">
-      <section className="rounded-xl border border-(--color-bg-tertiary) bg-(--color-bg-secondary) p-6 mb-6">
+    <main className="pt-8 pb-20 px-5 sm:px-8 sm:pt-12 w-full max-w-[1400px] mx-auto">
+      <Card className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-semibold mb-3">Clean Mode</h1>
-        <p className="text-(--color-text-secondary)">Cleanup tools for duplicate listens and items without listens.</p>
-      </section>
+        <p className="text-(--color-fg-secondary)">Cleanup tools for duplicate listens and items without listens.</p>
+      </Card>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <section className="rounded-lg border border-(--color-bg-tertiary) p-4">
+          <Card>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-semibold">Duplicate listens ({items.length})</h2>
               <button
@@ -166,7 +167,7 @@ export default function CleanMode() {
                 </thead>
                 <tbody>
                   {items.map((item) => (
-                    <tr key={`${item.track_id}_${item.previous_listen}_${item.duplicate_listen}`} className="border-b border-(--color-bg-tertiary)">
+                    <tr key={`${item.track_id}_${item.previous_listen}_${item.duplicate_listen}`} className="hover:bg-(--color-bg-tertiary)/60 rounded-lg">
                       <td className="py-2 pr-2 align-top">
                         <button
                           hidden={user === null || user === undefined}
@@ -179,7 +180,7 @@ export default function CleanMode() {
                       </td>
                       <td className="py-2 pr-3">
                         <ArtistLinks artists={item.artists} /> -{" "}
-                        <Link to={`/track/${item.track_id}`} className="hover:text-[--color-fg-secondary]">
+                        <Link to={`/track/${item.track_id}`} className="hover:text-(--color-fg-secondary)">
                           {item.track_title}
                         </Link>
                       </td>
@@ -196,9 +197,9 @@ export default function CleanMode() {
                 </tbody>
               </table>
             </div>
-          </section>
+          </Card>
 
-          <section className="rounded-lg border border-(--color-bg-tertiary) p-4">
+          <Card>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-semibold">Artists without listens ({artistsWithoutListens.length})</h2>
               <button
@@ -212,19 +213,19 @@ export default function CleanMode() {
             </div>
             <ul className="space-y-2 max-h-[420px] overflow-y-auto">
               {artistsWithoutListens.map((artist) => (
-                <li key={`orphan_artist_${artist.id}`} className="flex items-center justify-between border border-(--color-bg-tertiary) rounded px-3 py-2">
-                  <Link to={`/artist/${artist.id}`} className="hover:text-[--color-fg-secondary]">
+                <li key={`orphan_artist_${artist.id}`} className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-(--color-bg-tertiary)/60 transition-colors">
+                  <Link to={`/artist/${artist.id}`} className="hover:text-(--color-fg-secondary)">
                     {artist.name}
                   </Link>
-                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("artist", artist.id)} className="text-(--color-error)">
+                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("artist", artist.id)} className="text-(--color-error) hover:opacity-80">
                     Delete
                   </button>
                 </li>
               ))}
             </ul>
-          </section>
+          </Card>
 
-          <section className="rounded-lg border border-(--color-bg-tertiary) p-4">
+          <Card>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-semibold">Albums without listens ({albumsWithoutListens.length})</h2>
               <button
@@ -238,19 +239,19 @@ export default function CleanMode() {
             </div>
             <ul className="space-y-2 max-h-[420px] overflow-y-auto">
               {albumsWithoutListens.map((album) => (
-                <li key={`orphan_album_${album.id}`} className="flex items-center justify-between border border-(--color-bg-tertiary) rounded px-3 py-2">
-                  <Link to={`/album/${album.id}`} className="hover:text-[--color-fg-secondary]">
+                <li key={`orphan_album_${album.id}`} className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-(--color-bg-tertiary)/60 transition-colors">
+                  <Link to={`/album/${album.id}`} className="hover:text-(--color-fg-secondary)">
                     {album.name}
                   </Link>
-                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("album", album.id)} className="text-(--color-error)">
+                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("album", album.id)} className="text-(--color-error) hover:opacity-80">
                     Delete
                   </button>
                 </li>
               ))}
             </ul>
-          </section>
+          </Card>
 
-          <section className="rounded-lg border border-(--color-bg-tertiary) p-4">
+          <Card>
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-semibold">Tracks without listens ({tracksWithoutListens.length})</h2>
               <button
@@ -264,17 +265,17 @@ export default function CleanMode() {
             </div>
             <ul className="space-y-2 max-h-[420px] overflow-y-auto">
               {tracksWithoutListens.map((track) => (
-                <li key={`orphan_track_${track.id}`} className="flex items-center justify-between border border-(--color-bg-tertiary) rounded px-3 py-2">
-                  <Link to={`/track/${track.id}`} className="hover:text-[--color-fg-secondary]">
+                <li key={`orphan_track_${track.id}`} className="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-(--color-bg-tertiary)/60 transition-colors">
+                  <Link to={`/track/${track.id}`} className="hover:text-(--color-fg-secondary)">
                     {track.name}
                   </Link>
-                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("track", track.id)} className="text-(--color-error)">
+                  <button hidden={user === null || user === undefined} onClick={() => void deleteItem("track", track.id)} className="text-(--color-error) hover:opacity-80">
                     Delete
                   </button>
                 </li>
               ))}
             </ul>
-          </section>
+          </Card>
       </div>
     </main>
   );

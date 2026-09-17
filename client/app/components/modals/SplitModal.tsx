@@ -123,13 +123,13 @@ export default function SplitModal(props: Props) {
               <input
                 type="text"
                 placeholder={`New ${props.type.toLowerCase()} name`}
-                className="flex-1 p-2 border rounded"
+                className="flex-1"
                 value={artistName}
                 onChange={(e) => updateNewArtist(index, e.target.value)}
               />
               <button
                 onClick={() => removeNewArtist(index)}
-                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-3 py-1 rounded-lg bg-(--color-error)/15 text-(--color-error) hover:bg-(--color-error)/25 transition-colors disabled:opacity-50"
                 disabled={newArtists.length === 1}
               >
                 Remove
@@ -138,7 +138,7 @@ export default function SplitModal(props: Props) {
           ))}
           <button
             onClick={addNewArtist}
-            className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-3 py-1 rounded-lg bg-(--color-bg-tertiary) hover:bg-(--color-bg-tertiary)/70 transition-colors"
           >
             Add New Artist
           </button>
@@ -172,7 +172,7 @@ export default function SplitModal(props: Props) {
         ) : null}
 
         <button
-          className="hover:cursor-pointer px-5 py-2 rounded-md mt-5 bg-(--color-bg) hover:bg-(--color-bg-tertiary)"
+          className="large-button mt-5 disabled:opacity-50"
           onClick={doSplit}
           disabled={splitTargets.length === 0 && newArtists.every(name => name.trim() === "")}
         >

@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLoaderData, type LoaderFunctionArgs } from "react-router";
+import Card from "~/components/Card";
+import { Modal } from "~/components/modals/Modal";
 
 export async function clientLoader({ request }: LoaderFunctionArgs) {
   const res = await fetch("/apis/web/v1/live-shows");
@@ -247,12 +249,12 @@ export default function LiveShows() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-bold mb-4">Live Shows</h1>
+    <main className="pt-8 pb-20 px-5 sm:px-8 sm:pt-12 w-full max-w-[1400px] mx-auto flex flex-col gap-6">
+      <h1 className="text-2xl sm:text-3xl font-semibold">Live Shows</h1>
 
       {/* Import from Setlist.fm User */}
-      <div className="fg bg p-4 rounded-lg">
-        <h2 className="text-lg font-bold mb-3">Import My Concerts from Setlist.fm</h2>
+      <Card>
+        <h2 className="text-lg font-semibold mb-3">Import My Concerts from Setlist.fm</h2>
         <div className="flex gap-2 mb-4">
           <input
             type="text"
@@ -260,12 +262,12 @@ export default function LiveShows() {
             value={setlistFmUserId}
             onChange={(e) => setSetlistFmUserId(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") void fetchUserAttended(); }}
-            className="flex-1 px-3 py-2 border rounded"
+            className="flex-1"
           />
           <button
             onClick={fetchUserAttended}
             disabled={fetchingAttended}
-            className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+            className="large-button disabled:opacity-50"
           >
             {fetchingAttended ? "Fetching..." : "Fetch My Concerts"}
           </button>
@@ -278,19 +280,19 @@ export default function LiveShows() {
             </h3>
             <div className="grid gap-2 max-h-96 overflow-y-auto">
               {attendedConcerts.map((concert) => (
-                <div key={concert.id} className="border p-3 rounded flex justify-between items-start hover:bg-gray-50 dark:hover:bg-gray-800">
+                <div key={concert.id} className="rounded-lg p-3 flex justify-between items-start hover:bg-(--color-bg-tertiary)/60 transition-colors">
                   <div>
                     <div className="font-semibold">{concert.artist.name}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-(--color-fg-secondary)">
                       {concert.venue.name}, {concert.venue.city.name}, {concert.venue.city.country.name}
                     </div>
-                    <div className="text-sm text-gray-500">{concert.eventDate}</div>
-                    {concert.tour?.name && <div className="text-sm text-blue-500">Tour: {concert.tour.name}</div>}
+                    <div className="text-sm text-(--color-fg-tertiary)">{concert.eventDate}</div>
+                    {concert.tour?.name && <div className="text-sm text-(--color-primary)">Tour: {concert.tour.name}</div>}
                   </div>
                   <button
                     onClick={() => void importConcert(concert)}
                     disabled={importing}
-                    className="px-3 py-1 bg-green-500 text-white text-sm rounded disabled:opacity-50"
+                    className="px-3 py-1 rounded-lg bg-(--color-success)/15 text-(--color-success) hover:bg-(--color-success)/25 transition-colors text-sm disabled:opacity-50"
                   >
                     Import
                   </button>
@@ -299,13 +301,13 @@ export default function LiveShows() {
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* My Live Shows */}
-      <div className="fg bg p-4 rounded-lg">
-        <h2 className="text-lg font-bold mb-3">My Live Shows ({shows.length})</h2>
+      <Card>
+        <h2 className="text-lg font-semibold mb-3">My Live Shows ({shows.length})</h2>
         {shows.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-(--color-fg-secondary)">
             No live shows imported yet. Enter your Setlist.fm User ID above to import your concerts.
           </div>
         ) : (
@@ -313,28 +315,28 @@ export default function LiveShows() {
             {shows.map((show) => (
               <div
                 key={show.id}
-                className="border p-4 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-                onClick={() => { console.log("Clicked show:", show.id); void fetchShowDetails(show.id); }}
+                className="rounded-lg p-4 cursor-pointer hover:bg-(--color-bg-tertiary)/60 transition-colors"
+                onClick={() => { void fetchShowDetails(show.id); }}
               >
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="font-bold text-lg flex items-center gap-2">
                       {show.artist_name}
                       {show.koito_artist_id ? (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">Linked</span>
+                        <span className="text-xs bg-(--color-success)/20 text-(--color-success) px-2 py-0.5 rounded-full">Linked</span>
                       ) : (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">Unlinked</span>
+                        <span className="text-xs bg-(--color-warning)/20 text-(--color-warning) px-2 py-0.5 rounded-full">Unlinked</span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <div className="text-sm text-(--color-fg-secondary)">
                       {show.venue_name}, {show.city}, {show.country}
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">{formatDate(show.event_date)}</div>
-                    {show.tour_name && <div className="text-sm text-blue-500 mt-1">Tour: {show.tour_name}</div>}
+                    <div className="text-sm text-(--color-fg-tertiary) mt-1">{formatDate(show.event_date)}</div>
+                    {show.tour_name && <div className="text-sm text-(--color-primary) mt-1">Tour: {show.tour_name}</div>}
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); void deleteShow(show.id); }}
-                    className="px-3 py-1 border border-red-500 text-red-500 rounded hover:bg-red-50 text-sm"
+                    className="px-3 py-1 rounded-lg text-(--color-error) hover:bg-(--color-error)/10 transition-colors text-sm"
                   >
                     Delete
                   </button>
@@ -343,30 +345,27 @@ export default function LiveShows() {
             ))}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Show Details Modal */}
-      {showDetails && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-bold">{showDetails.show.artist_name}</h2>
-              <button onClick={() => setShowDetails(null)} className="text-2xl">&times;</button>
-            </div>
-            <div className="text-sm text-gray-600 mb-4">
+      <Modal isOpen={!!showDetails} onClose={() => setShowDetails(null)} maxW={640}>
+        {showDetails && (
+          <>
+            <h2 className="text-xl font-bold mb-1">{showDetails.show.artist_name}</h2>
+            <div className="text-sm text-(--color-fg-secondary) mb-4">
               {showDetails.show.venue_name}, {showDetails.show.city}, {showDetails.show.country}
               <br />
               {formatDate(showDetails.show.event_date)}
             </div>
 
             {/* Artist Matching */}
-            <div className="mb-4 p-3 border rounded">
+            <div className="mb-4 p-3 rounded-lg bg-(--color-bg-tertiary)/40">
               <div className="flex justify-between items-center">
                 <span className="font-semibold">Artist:</span>
                 {showDetails.show.koito_artist_id ? (
-                  <span className="text-green-600">Linked to Koito</span>
+                  <span className="text-(--color-success)">Linked to Koito</span>
                 ) : (
-                  <span className="text-yellow-600">Not linked</span>
+                  <span className="text-(--color-warning)">Not linked</span>
                 )}
               </div>
               <button
@@ -375,7 +374,7 @@ export default function LiveShows() {
                   setArtistSearchQuery(showDetails.show.artist_name);
                   void searchArtists(showDetails.show.artist_name);
                 }}
-                className="mt-2 px-3 py-1 bg-blue-500 text-white rounded text-sm"
+                className="large-button mt-2 text-sm"
               >
                 {showDetails.show.koito_artist_id ? "Change Link" : "Link Artist"}
               </button>
@@ -383,14 +382,14 @@ export default function LiveShows() {
 
             {/* Songs List */}
             <h3 className="font-bold mb-2">Songs ({showDetails.songs.length})</h3>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {showDetails.songs.map((song) => (
-                <div key={song.id} className="flex justify-between items-center p-2 border rounded">
+                <div key={song.id} className="flex justify-between items-center p-2 rounded-lg hover:bg-(--color-bg-tertiary)/60 transition-colors">
                   <div>
                     <span className="font-medium">{song.song_order}. {song.setlistfm_song_name}</span>
-                    {song.is_cover && <span className="text-xs text-orange-500 ml-2">(Cover)</span>}
+                    {song.is_cover && <span className="text-xs text-(--color-warning) ml-2">(Cover)</span>}
                     {song.koito_song_title && (
-                      <span className="text-xs text-green-600 ml-2">&rarr; {song.koito_song_title}</span>
+                      <span className="text-xs text-(--color-success) ml-2">&rarr; {song.koito_song_title}</span>
                     )}
                   </div>
                   <button
@@ -399,100 +398,96 @@ export default function LiveShows() {
                       setSongSearchQuery(song.setlistfm_song_name);
                       void searchSongs(song.setlistfm_song_name, showDetails.show.koito_artist_id);
                     }}
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                    className="px-2 py-1 rounded-lg bg-(--color-bg-tertiary) hover:bg-(--color-bg-tertiary)/70 transition-colors text-xs"
                   >
                     {song.koito_song_id ? "Change" : "Link"}
                   </button>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </Modal>
 
       {/* Edit Artist Modal */}
-      {editingArtist && showDetails && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg max-w-lg w-full p-6">
-            <h3 className="text-lg font-bold mb-4">Link Artist</h3>
-            <div className="flex gap-2 mb-4">
-              <input
-                type="text"
-                value={artistSearchQuery}
-                onChange={(e) => setArtistSearchQuery(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") void searchArtists(artistSearchQuery); }}
-                className="flex-1 px-3 py-2 border rounded"
-              />
-              <button
-                onClick={() => searchArtists(artistSearchQuery)}
-                disabled={searchingArtists}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                Search
-              </button>
-            </div>
-            <div className="max-h-64 overflow-y-auto space-y-2">
-              {artistMatches.map((artist) => (
-                <button
-                  key={artist.id}
-                  onClick={() => linkArtist(showDetails.show.id, showDetails.show.artist_name, artist.id)}
-                  className="w-full text-left p-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  {artist.name}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setEditingArtist(false)}
-              className="mt-4 px-4 py-2 border rounded w-full"
-            >
-              Cancel
-            </button>
-          </div>
+      <Modal isOpen={editingArtist && !!showDetails} onClose={() => setEditingArtist(false)} maxW={500}>
+        <h3 className="text-lg font-bold mb-4">Link Artist</h3>
+        <div className="flex gap-2 mb-4">
+          <input
+            type="text"
+            value={artistSearchQuery}
+            onChange={(e) => setArtistSearchQuery(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") void searchArtists(artistSearchQuery); }}
+            className="flex-1"
+          />
+          <button
+            onClick={() => searchArtists(artistSearchQuery)}
+            disabled={searchingArtists}
+            className="large-button"
+          >
+            Search
+          </button>
         </div>
-      )}
+        <div className="max-h-64 overflow-y-auto space-y-1">
+          {artistMatches.map((artist) => (
+            <button
+              key={artist.id}
+              onClick={() => showDetails && linkArtist(showDetails.show.id, showDetails.show.artist_name, artist.id)}
+              className="w-full text-left p-2 rounded-lg hover:bg-(--color-bg-tertiary)/60 transition-colors"
+            >
+              {artist.name}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setEditingArtist(false)}
+          className="large-button mt-4 w-full"
+        >
+          Cancel
+        </button>
+      </Modal>
 
       {/* Edit Song Modal */}
-      {editingSong && showDetails && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg max-w-lg w-full p-6">
+      <Modal isOpen={!!editingSong && !!showDetails} onClose={() => setEditingSong(null)} maxW={500}>
+        {editingSong && (
+          <>
             <h3 className="text-lg font-bold mb-4">Link Song: {editingSong.setlistfm_song_name}</h3>
             <div className="flex gap-2 mb-4">
               <input
                 type="text"
                 value={songSearchQuery}
                 onChange={(e) => setSongSearchQuery(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") void searchSongs(songSearchQuery, showDetails.show.koito_artist_id); }}
-                className="flex-1 px-3 py-2 border rounded"
+                onKeyDown={(e) => { if (e.key === "Enter") void searchSongs(songSearchQuery, showDetails?.show.koito_artist_id); }}
+                className="flex-1"
               />
               <button
-                onClick={() => searchSongs(songSearchQuery, showDetails.show.koito_artist_id)}
+                onClick={() => searchSongs(songSearchQuery, showDetails?.show.koito_artist_id)}
                 disabled={searchingSongs}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+                className="large-button"
               >
                 Search
               </button>
             </div>
-            <div className="max-h-64 overflow-y-auto space-y-2">
+            <div className="max-h-64 overflow-y-auto space-y-1">
               {songMatches.map((song) => (
                 <button
                   key={song.id}
-                  onClick={() => linkSong(showDetails.show.id, editingSong.setlistfm_song_name, song.id)}
-                  className="w-full text-left p-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+                  onClick={() => showDetails && linkSong(showDetails.show.id, editingSong.setlistfm_song_name, song.id)}
+                  className="w-full text-left p-2 rounded-lg hover:bg-(--color-bg-tertiary)/60 transition-colors"
                 >
-                  {song.title} <span className="text-gray-500">by {song.artist_name}</span>
+                  {song.title} <span className="text-(--color-fg-tertiary)">by {song.artist_name}</span>
                 </button>
               ))}
             </div>
-            <button
-              onClick={() => setEditingSong(null)}
-              className="mt-4 px-4 py-2 border rounded w-full"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+          </>
+        )}
+        <button
+          onClick={() => setEditingSong(null)}
+          className="large-button mt-4 w-full"
+        >
+          Cancel
+        </button>
+      </Modal>
+    </main>
   );
 }

@@ -20,7 +20,7 @@ export default function FeaturedTopItem<T extends Ranked<FeaturedItem>>({
     case "album": {
       const album = data as Album;
       return (
-        <div className="flex flex-col items-center bg-(--color-bg-secondary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
+        <div className="flex flex-col items-center bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
           <div className="absolute -top-2 -left-2 bg-transparent text-2xl w-10 h-10 flex items-center justify-center">
             👑
           </div>
@@ -57,7 +57,7 @@ export default function FeaturedTopItem<T extends Ranked<FeaturedItem>>({
     case "track": {
       const track = data as Track;
       return (
-        <div className="flex flex-col items-center bg-(--color-bg-secondary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
+        <div className="flex flex-col items-center bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
           <div className="absolute -top-2 -left-2 bg-transparent text-2xl w-10 h-10 flex items-center justify-center">
             👑
           </div>
@@ -91,7 +91,7 @@ export default function FeaturedTopItem<T extends Ranked<FeaturedItem>>({
       const artist = data as Artist;
       const liveCount = (item as any).liveCount;
       return (
-    <div className="flex flex-col items-center bg-(--color-bg-secondary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
+    <div className="flex flex-col items-center bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-xl overflow-hidden shadow-lg p-4 gap-3 relative min-h-[290px]">
       <div className="absolute -top-2 -left-2 bg-transparent text-2xl w-10 h-10 flex items-center justify-center">
         👑
       </div>

@@ -23,7 +23,7 @@ export default function ChartCard<T extends Ranked<ChartItem>>({
     case "album": {
       const album = data as Album;
       return (
-        <div className="flex flex-col bg-(--color-bg-secondary) rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex flex-col bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
           <div className="relative">
             <Link to={`/album/${album.id}`}>
               <img
@@ -67,7 +67,7 @@ export default function ChartCard<T extends Ranked<ChartItem>>({
     case "track": {
       const track = data as Track;
       return (
-        <div className="flex bg-(--color-bg-secondary) rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 p-3 gap-3 items-start">
+        <div className="flex bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200 p-3 gap-3 items-start">
           <div className="relative shrink-0">
             <div className="absolute top-1 left-1 bg-black/60 text-white text-sm font-bold px-2 py-1 rounded">
               #{rank}
@@ -105,7 +105,7 @@ export default function ChartCard<T extends Ranked<ChartItem>>({
     case "artist": {
       const artist = data as Artist;
       return (
-        <div className="flex flex-col items-center bg-(--color-bg-secondary) rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200">
+        <div className="flex flex-col items-center bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200">
           <div className="relative mb-3">
             <Link to={`/artist/${artist.id}`}>
               <img
