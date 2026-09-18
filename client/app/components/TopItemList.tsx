@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import ArtistLinks from "./ArtistLinks";
 import {
   imageUrl,
@@ -64,8 +64,30 @@ function ItemCard({
   rank: number;
   ranked?: boolean;
 }) {
-  const rowClasses =
-    "flex items-center gap-3 rounded-lg p-1.5 -mx-1.5 hover:bg-(--color-bg-tertiary)/60 transition-colors";
+  const featured = ranked && rank === 1;
+
+  const rowClasses = `flex items-center gap-3 rounded-lg transition-colors hover:bg-(--color-bg-tertiary)/60 ${
+    featured
+      ? "p-2 -mx-2 bg-(--color-bg-tertiary)/30"
+      : "p-1.5 -mx-1.5"
+  }`;
+
+  const imgSize = featured ? "w-16 h-16" : "w-12 h-12";
+  const titleClasses = `block truncate ${
+    featured ? "text-base font-semibold" : "text-sm font-medium"
+  }`;
+
+  const rankBadge = ranked && (
+    <div
+      className={`text-end shrink-0 ${
+        featured
+          ? "w-6 text-lg font-bold text-(--color-accent)"
+          : "w-5 text-sm text-(--color-fg-tertiary)"
+      }`}
+    >
+      {rank}
+    </div>
+  );
 
   switch (type) {
     case "album": {
@@ -73,27 +95,18 @@ function ItemCard({
 
       return (
         <div className={rowClasses}>
-          {ranked && (
-            <div className="w-5 text-end text-sm text-(--color-fg-tertiary)">
-              {rank}
-            </div>
-          )}
+          {rankBadge}
           <Link to={`/album/${album.id}`} className="shrink-0">
             <img
               loading="lazy"
               src={imageUrl(album.image, "medium")}
               alt={album.title}
-              className="w-12 h-12 rounded-lg object-cover"
+              className={`${imgSize} rounded-lg object-cover`}
             />
           </Link>
           <div className="min-w-0 flex-1">
-            <Link
-              to={`/album/${album.id}`}
-              className="hover:text-(--color-fg-secondary)"
-            >
-              <span className="text-sm font-medium block truncate">
-                {album.title}
-              </span>
+            <Link to={`/album/${album.id}`} className="hover:text-(--color-fg-secondary)">
+              <span className={titleClasses}>{album.title}</span>
             </Link>
             {album.is_various_artists ? (
               <span className="text-xs text-(--color-fg-secondary)">
@@ -122,27 +135,18 @@ function ItemCard({
 
       return (
         <div className={rowClasses}>
-          {ranked && (
-            <div className="w-5 text-end text-sm text-(--color-fg-tertiary)">
-              {rank}
-            </div>
-          )}
+          {rankBadge}
           <Link to={`/track/${track.id}`} className="shrink-0">
             <img
               loading="lazy"
               src={imageUrl(track.image, "medium")}
               alt={track.title}
-              className="w-12 h-12 rounded-lg object-cover"
+              className={`${imgSize} rounded-lg object-cover`}
             />
           </Link>
           <div className="min-w-0 flex-1">
-            <Link
-              to={`/track/${track.id}`}
-              className="hover:text-(--color-fg-secondary)"
-            >
-              <span className="text-sm font-medium block truncate">
-                {track.title}
-              </span>
+            <Link to={`/track/${track.id}`} className="hover:text-(--color-fg-secondary)">
+              <span className={titleClasses}>{track.title}</span>
             </Link>
             <div className="text-xs truncate">
               <ArtistLinks
@@ -164,17 +168,13 @@ function ItemCard({
           className={rowClasses + " hover:text-(--color-fg-secondary)"}
           to={`/artist/${artist.id}`}
         >
-          {ranked && (
-            <div className="w-5 text-end text-sm text-(--color-fg-tertiary)">
-              {rank}
-            </div>
-          )}
+          {rankBadge}
           <div className="relative shrink-0">
             <img
               loading="lazy"
               src={imageUrl(artist.image, "small")}
               alt={artist.name}
-              className="w-12 h-12 rounded-full object-cover"
+              className={`${imgSize} rounded-lg object-cover`}
             />
             {liveCount > 0 && (
               <div
@@ -186,9 +186,7 @@ function ItemCard({
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <span className="text-sm font-medium block truncate">
-              {artist.name}
-            </span>
+            <span className={titleClasses}>{artist.name}</span>
           </div>
           <div className="text-xs text-(--color-fg-secondary) whitespace-nowrap shrink-0">
             {artist.listen_count} plays

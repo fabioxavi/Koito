@@ -1,6 +1,5 @@
 import type { Route } from "./+types/Home";
 import LastPlays from "~/components/LastPlays";
-import ActivityGrid from "~/components/ActivityGrid";
 import StatTile from "~/components/StatTile";
 import TopItemList from "~/components/TopItemList";
 import { useState } from "react";
@@ -68,9 +67,9 @@ export default function Home() {
 
   return (
     <main className="w-full flex-grow">
-      <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-24 max-w-[1800px] mx-auto flex flex-col gap-4">
+      <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-8 max-w-[1800px] mx-auto flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl sm:text-3xl font-bold header-font">
+          <h1 className="text-lg sm:text-xl font-semibold header-font">
             {getGreeting()}
             {user?.username ? `, ${user.username}` : ""}
           </h1>
@@ -166,8 +165,6 @@ export default function Home() {
             <LastPlays bare showNowPlaying limit={PANEL_ITEMS} />
           </DashboardPanel>
         </div>
-
-        <ActivityGrid range={91} />
       </div>
     </main>
   );
