@@ -1,17 +1,23 @@
 import type { Route } from "./+types/Home";
 import LastPlays from "~/components/LastPlays";
 import ActivityGrid from "~/components/ActivityGrid";
-import AllTimeStats from "~/components/AllTimeStats";
-import { useEffect, useState } from "react";
+import StatTile from "~/components/StatTile";
+import TopItemList from "~/components/TopItemList";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { average } from "color.js";
 import PeriodSelector from "~/components/PeriodSelector";
 import { useAppContext } from "~/providers/AppProvider";
-import Card from "~/components/Card";
-import Shelf from "~/components/home/Shelf";
-import NowPlayingBar from "~/components/home/NowPlayingBar";
-import MilestoneBanner from "~/components/home/MilestoneBanner";
-import { getTopAlbums, getTopArtists, getTopTracks, imageUrl, type getItemsArgs } from "api/api";
+import DashboardPanel from "~/components/home/DashboardPanel";
+import { Disc, Music, Users } from "lucide-react";
+import {
+  getStats,
+  getTopAlbums,
+  getTopArtists,
+  getTopTracks,
+  type getItemsArgs,
+} from "api/api";
+
+const PANEL_ITEMS = 8;
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Koito" }, { name: "description", content: "Koito" }];
@@ -25,106 +31,144 @@ function getGreeting() {
   return "Boa noite";
 }
 
+const MILESTONES = [
+  1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000,
+];
+
 export default function Home() {
   const [period, setPeriod] = useState("week");
-  const { homeItems, user } = useAppContext();
-  const [heroColor, setHeroColor] = useState<string>("rgba(0,0,0,0)");
+  const { user } = useAppContext();
 
+  const statsQuery = useQuery({
+    queryKey: ["stats", period],
+    queryFn: ({ queryKey }) => getStats(queryKey[1]),
+  });
   const artistsQuery = useQuery({
-    queryKey: ["top-artists", { limit: homeItems, period, page: 0 }],
+    queryKey: ["top-artists", { limit: PANEL_ITEMS, period, page: 0 }],
     queryFn: ({ queryKey }) => getTopArtists(queryKey[1] as getItemsArgs),
   });
   const albumsQuery = useQuery({
-    queryKey: ["top-albums", { limit: homeItems, period, page: 0 }],
+    queryKey: ["top-albums", { limit: PANEL_ITEMS, period, page: 0 }],
     queryFn: ({ queryKey }) => getTopAlbums(queryKey[1] as getItemsArgs),
   });
   const tracksQuery = useQuery({
-    queryKey: ["top-tracks", { limit: homeItems, period, page: 0 }],
+    queryKey: ["top-tracks", { limit: PANEL_ITEMS, period, page: 0 }],
     queryFn: ({ queryKey }) => getTopTracks(queryKey[1] as getItemsArgs),
   });
 
-  const heroImage = artistsQuery.data?.items[0]?.item.image;
+  const allTimeQuery = useQuery({
+    queryKey: ["stats", "all_time"],
+    queryFn: ({ queryKey }) => getStats(queryKey[1]),
+  });
 
-  useEffect(() => {
-    if (!heroImage) {
-      setHeroColor("rgba(0,0,0,0)");
-      return;
-    }
-    average(imageUrl(heroImage, "medium"), { amount: 1 }).then((c) => {
-      setHeroColor(`rgba(${c[0]},${c[1]},${c[2]},0.55)`);
-    });
-  }, [heroImage]);
+  const stats = statsQuery.data;
+  const allTimeCount = allTimeQuery.data?.listen_count;
+  const nextMilestone =
+    allTimeCount !== undefined ? MILESTONES.find((m) => m > allTimeCount) : undefined;
 
   return (
-    <main className="w-full flex-grow relative">
-      <div
-        className="absolute inset-x-0 top-0 h-[420px] -z-10 transition-[background] duration-700 pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, ${heroColor}, var(--color-bg) 85%)`,
-        }}
-      />
-      {heroImage && (
-        <img
-          src={imageUrl(heroImage, "large")}
-          alt=""
-          aria-hidden
-          className="absolute inset-x-0 top-0 h-[420px] w-full object-cover opacity-25 blur-3xl -z-20 scale-110 pointer-events-none"
-        />
-      )}
-
-      <div className="px-5 sm:px-10 pt-10 sm:pt-16 pb-28 max-w-[1600px] mx-auto flex flex-col gap-10">
-        <div className="flex flex-col gap-1">
-          <h1 className="header-font text-4xl sm:text-6xl font-bold leading-tight">
+    <main className="w-full flex-grow">
+      <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-24 max-w-[1800px] mx-auto flex flex-col gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold header-font">
             {getGreeting()}
             {user?.username ? `, ${user.username}` : ""}
           </h1>
-          <p className="text-(--color-fg-secondary) text-lg">
-            Aqui está o que tens andado a ouvir.
-          </p>
+          <PeriodSelector setter={setPeriod} current={period} />
         </div>
 
-        <MilestoneBanner />
-
-        <PeriodSelector setter={setPeriod} current={period} />
-
-        <Shelf
-          title="Top Artists"
-          type="artist"
-          href={`/chart/top-artists?period=${period}`}
-          isPending={artistsQuery.isPending}
-          isError={artistsQuery.isError}
-          data={artistsQuery.data}
-        />
-        <Shelf
-          title="Top Albums"
-          type="album"
-          href={`/chart/top-albums?period=${period}`}
-          isPending={albumsQuery.isPending}
-          isError={albumsQuery.isError}
-          data={albumsQuery.data}
-        />
-        <Shelf
-          title="Top Tracks"
-          type="track"
-          href={`/chart/top-tracks?period=${period}`}
-          isPending={tracksQuery.isPending}
-          isError={tracksQuery.isError}
-          data={tracksQuery.data}
-        />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card>
-            <AllTimeStats />
-          </Card>
-          <ActivityGrid configurable />
-          <LastPlays
-            showNowPlaying={true}
-            limit={Math.floor(homeItems * 2.7)}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+          <div
+            className="lg:col-span-3 rounded-2xl p-5 flex flex-col justify-between gap-4 text-white min-h-[140px]"
+            style={{
+              background:
+                "linear-gradient(135deg, var(--color-primary), var(--color-accent))",
+            }}
+          >
+            <div>
+              <div className="text-4xl sm:text-5xl font-bold header-font">
+                {stats ? stats.minutes_listened.toLocaleString() : "—"}
+              </div>
+              <div className="text-sm opacity-80">Minutes Listened</div>
+            </div>
+            {nextMilestone && allTimeCount !== undefined && (
+              <div className="flex flex-col gap-1">
+                <div className="h-1.5 rounded-full bg-white/25 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-white"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (allTimeCount / nextMilestone) * 100
+                      )}%`,
+                    }}
+                  />
+                </div>
+                <span className="text-xs opacity-80">
+                  {allTimeCount.toLocaleString()} / {nextMilestone.toLocaleString()} plays all time
+                </span>
+              </div>
+            )}
+          </div>
+          <div className="lg:col-span-3 grid grid-cols-2 gap-3">
+            <StatTile
+              accent="primary"
+              value={stats ? stats.listen_count.toLocaleString() : "—"}
+              label="Plays"
+            />
+            <StatTile
+              accent="accent"
+              value={stats ? stats.artist_count.toLocaleString() : "—"}
+              label="Artists"
+            />
+            <StatTile
+              accent="success"
+              value={stats ? stats.album_count.toLocaleString() : "—"}
+              label="Albums"
+            />
+            <StatTile
+              accent="warning"
+              value={stats ? stats.track_count.toLocaleString() : "—"}
+              label="Tracks"
+            />
+          </div>
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <DashboardPanel title="Top Artists" icon={Users} href={`/chart/top-artists?period=${period}`}>
+            {artistsQuery.isPending ? (
+              <p className="text-(--color-fg-secondary) text-sm">Loading...</p>
+            ) : artistsQuery.isError ? (
+              <p className="error text-sm">Error loading artists</p>
+            ) : (
+              <TopItemList type="artist" ranked data={artistsQuery.data!} />
+            )}
+          </DashboardPanel>
+          <DashboardPanel title="Top Albums" icon={Disc} href={`/chart/top-albums?period=${period}`}>
+            {albumsQuery.isPending ? (
+              <p className="text-(--color-fg-secondary) text-sm">Loading...</p>
+            ) : albumsQuery.isError ? (
+              <p className="error text-sm">Error loading albums</p>
+            ) : (
+              <TopItemList type="album" ranked data={albumsQuery.data!} />
+            )}
+          </DashboardPanel>
+          <DashboardPanel title="Top Tracks" icon={Music} href={`/chart/top-tracks?period=${period}`}>
+            {tracksQuery.isPending ? (
+              <p className="text-(--color-fg-secondary) text-sm">Loading...</p>
+            ) : tracksQuery.isError ? (
+              <p className="error text-sm">Error loading tracks</p>
+            ) : (
+              <TopItemList type="track" ranked data={tracksQuery.data!} />
+            )}
+          </DashboardPanel>
+          <DashboardPanel title="Last Played" href="/listens?period=all_time">
+            <LastPlays bare showNowPlaying limit={PANEL_ITEMS} />
+          </DashboardPanel>
+        </div>
+
+        <ActivityGrid range={91} />
       </div>
-
-      <NowPlayingBar />
     </main>
   );
 }

@@ -21,6 +21,8 @@ interface Props {
   trackId?: number;
   hideArtists?: boolean;
   showNowPlaying?: boolean;
+  /** Render just the list, without the Card shell or heading (for embedding in a custom panel) */
+  bare?: boolean;
 }
 
 export default function LastPlays(props: Props) {
@@ -64,14 +66,18 @@ export default function LastPlays(props: Props) {
   };
 
   if (isPending) {
-    return (
+    return props.bare ? (
+      <p className="text-(--color-fg-secondary) text-sm">Loading...</p>
+    ) : (
       <Card className="w-full">
         <h3>{header}</h3>
         <p>Loading...</p>
       </Card>
     );
   } else if (isError) {
-    return (
+    return props.bare ? (
+      <p className="error text-sm">Error: {error.message}</p>
+    ) : (
       <Card className="w-full">
         <h3>{header}</h3>
         <p className="error">Error: {error.message}</p>
@@ -86,12 +92,8 @@ export default function LastPlays(props: Props) {
   params += props.albumId ? `&album_id=${props.albumId}` : "";
   params += props.trackId ? `&track_id=${props.trackId}` : "";
 
-  return (
-    <Card className="w-full text-sm sm:text-[16px]">
-      <h3 className="hover:underline">
-        <Link to={`/listens?period=all_time${params}`}>{header}</Link>
-      </h3>
-      <table className="-ml-1.5 w-full">
+  const list = (
+    <table className="-ml-1.5 w-full">
         <tbody>
           {props.showNowPlaying && npData && npData.currently_playing && (
             <tr className="group hover:bg-(--color-bg-tertiary)/60 rounded-lg">
@@ -152,6 +154,16 @@ export default function LastPlays(props: Props) {
           ))}
         </tbody>
       </table>
+  );
+
+  if (props.bare) return list;
+
+  return (
+    <Card className="w-full text-sm sm:text-[16px]">
+      <h3 className="hover:underline">
+        <Link to={`/listens?period=all_time${params}`}>{header}</Link>
+      </h3>
+      {list}
     </Card>
   );
 }
