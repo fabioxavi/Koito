@@ -1,8 +1,10 @@
-FROM node AS frontend
+FROM node:22 AS frontend
 
 ARG KOITO_VERSION
 ENV VITE_KOITO_VERSION=$KOITO_VERSION
 ENV BUILD_TARGET=docker
+
+RUN corepack enable
 
 WORKDIR /client
 COPY ./client/package.json ./client/yarn.lock ./
