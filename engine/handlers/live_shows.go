@@ -563,7 +563,7 @@ func LinkSong(store db.DB) http.HandlerFunc {
 			return
 		}
 
-		err := psqlDB.Exec(ctx, `
+		rowsAffected, err := psqlDB.ExecRowsAffected(ctx, `
 			UPDATE live_show_songs
 			SET koito_song_id = $1
 			WHERE live_show_id = $2 AND setlistfm_song_name = $3
@@ -572,6 +572,13 @@ func LinkSong(store db.DB) http.HandlerFunc {
 		if err != nil {
 			l.Err(err).Msg("Failed to link song")
 			utils.WriteError(w, "failed to link song", http.StatusInternalServerError)
+			return
+		}
+
+		if rowsAffected == 0 {
+			l.Warn().Int("live_show_id", req.LiveShowID).Str("song", req.SetlistFmSongName).
+				Msg("Link song matched no rows; setlist entry is missing, try re-importing the show")
+			utils.WriteError(w, "no matching setlist song entry found for this show; try re-importing it", http.StatusNotFound)
 			return
 		}
 
@@ -595,10 +602,11 @@ func LinkArtist(store db.DB) http.HandlerFunc {
 		}
 
 		err := psqlDB.Exec(ctx, `
-			UPDATE live_show_artists
-			SET koito_artist_id = $1
-			WHERE live_show_id = $2 AND setlistfm_artist_name = $3
-		`, req.KoitoArtistID, req.LiveShowID, req.SetlistFmArtistName)
+			INSERT INTO live_show_artists (live_show_id, setlistfm_artist_name, koito_artist_id)
+			VALUES ($1, $2, $3)
+			ON CONFLICT (live_show_id, setlistfm_artist_name) DO UPDATE SET
+				koito_artist_id = EXCLUDED.koito_artist_id
+		`, req.LiveShowID, req.SetlistFmArtistName, req.KoitoArtistID)
 
 		if err != nil {
 			l.Err(err).Msg("Failed to link artist")

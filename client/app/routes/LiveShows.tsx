@@ -201,6 +201,10 @@ export default function LiveShows() {
         setEditingArtist(false);
         await fetchShowDetails(showId);
         await fetchShows();
+      } else {
+        const body = await response.json().catch(() => null);
+        console.error("Failed to link artist:", body?.error || response.statusText);
+        alert(body?.error || "Failed to link artist");
       }
     } catch (err) {
       console.error("Failed to link artist:", err);
@@ -221,6 +225,10 @@ export default function LiveShows() {
       if (response.ok) {
         setEditingSong(null);
         await fetchShowDetails(showId);
+      } else {
+        const body = await response.json().catch(() => null);
+        console.error("Failed to link song:", body?.error || response.statusText);
+        alert(body?.error || "Failed to link song");
       }
     } catch (err) {
       console.error("Failed to link song:", err);

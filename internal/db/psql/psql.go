@@ -72,6 +72,17 @@ func (d *Psql) Exec(ctx context.Context, query string, args ...any) error {
 	return err
 }
 
+// ExecRowsAffected behaves like Exec but also returns the number of rows
+// affected by the query, so callers can detect a no-op UPDATE/DELETE that
+// postgres would otherwise report as a successful (but empty) execution.
+func (d *Psql) ExecRowsAffected(ctx context.Context, query string, args ...any) (int64, error) {
+	tag, err := d.conn.Exec(ctx, query, args...)
+	if err != nil {
+		return 0, err
+	}
+	return tag.RowsAffected(), nil
+}
+
 // Not part of the DB interface this package implements. Only used for testing.
 func (d *Psql) RowExists(ctx context.Context, query string, args ...any) (bool, error) {
 	var exists bool
