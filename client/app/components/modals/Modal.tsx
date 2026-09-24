@@ -68,12 +68,15 @@ export function Modal({
   // Close on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(e.target as Node)
-      ) {
-        onClose();
-      }
+      const target = e.target as Node;
+      if (modalRef.current && modalRef.current.contains(target)) return;
+      // Modals are separate portals, so a click inside a modal stacked on top
+      // of this one is not a descendant of this modal's ref. Without this
+      // check, that click would be treated as "outside" and close this
+      // (lower) modal, which unmounts the stacked modal before its own click
+      // handler can run.
+      if ((target as HTMLElement).closest?.('[data-modal-content]')) return;
+      onClose();
     };
     if (isOpen) document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -89,6 +92,7 @@ export function Modal({
     >
       <div
         ref={modalRef}
+        data-modal-content
         className={`bg-(--color-bg-secondary) border border-(--color-bg-tertiary) rounded-2xl shadow-xl shadow-black/30 p-6 w-full relative max-h-3/4 overflow-y-auto transition-all duration-100 ${
           isClosing ? 'animate-fade-out-scale' : 'animate-fade-in-scale'
         }`}
