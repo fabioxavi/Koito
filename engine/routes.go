@@ -115,6 +115,7 @@ func bindRoutes(
 			r.Post("/live-shows/link-song", handlers.LinkSong(db))
 			r.Get("/live-shows/search-artists", handlers.SearchKoitoArtistsForMatching(db))
 			r.Get("/live-shows/search-songs", handlers.SearchKoitoSongsForMatching(db))
+			r.Get("/upcoming-shows", handlers.GetUpcomingShowsHandler(db))
 		})
 	})
 

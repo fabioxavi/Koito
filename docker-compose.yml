@@ -18,6 +18,10 @@ services:
       # Setlist.fm API key for live shows
       # Get from https://www.setlist.fm/settings/api
       KOITO_SETLISTFM_API_KEY: "mnY8kNvyOpuhmJkxzCSRzUv86hZSwuIotS8h"
+      # Bandsintown app id for upcoming shows (free, no signup required, any identifier works)
+      KOITO_BANDSINTOWN_APP_ID: "koito_fabioxavi"
+      # Only show upcoming concerts in these countries (comma-separated, matches Bandsintown's country names)
+      KOITO_UPCOMING_SHOWS_COUNTRIES: "Portugal"
     ports:
       - "4111:4110"  # Acedes ao teste pela porta 4111
     volumes:

@@ -162,6 +162,18 @@ func SpotifyClientSecret() string {
 	return globalConfig.spotifyClientSecret
 }
 
+func BandsintownAppId() string {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.bandsintownAppId
+}
+
+func UpcomingShowsCountries() []string {
+	lock.RLock()
+	defer lock.RUnlock()
+	return globalConfig.upcomingShowsCountries
+}
+
 func SkipImport() bool {
 	lock.RLock()
 	defer lock.RUnlock()

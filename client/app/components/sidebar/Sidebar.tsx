@@ -1,4 +1,4 @@
-import { ExternalLink, History, Home, Info, Users, Disc, Music, Headphones, Sparkles, Mic2 } from "lucide-react";
+import { ExternalLink, History, Home, Info, Users, Disc, Music, Headphones, Sparkles, Mic2, CalendarDays } from "lucide-react";
 import SidebarSearch from "./SidebarSearch";
 import SidebarItem from "./SidebarItem";
 import SidebarSettings from "./SidebarSettings";
@@ -34,6 +34,9 @@ export default function Sidebar() {
         </SidebarItem>
         <SidebarItem space={10} to="/live-shows" name="Live Shows" onClick={() => {}} modal={<></>}>
           <Mic2 size={iconSize} />
+        </SidebarItem>
+        <SidebarItem space={10} to="/upcoming-shows" name="Upcoming Shows" onClick={() => {}} modal={<></>}>
+          <CalendarDays size={iconSize} />
         </SidebarItem>
       </div>
       <div className="flex gap-4 sm:flex-col">

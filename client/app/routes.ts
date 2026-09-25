@@ -13,4 +13,5 @@ export default [
   route("/clean-mode", "routes/CleanMode.tsx"),
   route("/theme-helper", "routes/ThemeHelper.tsx"),
   route("/live-shows", "routes/LiveShows.tsx"),
+  route("/upcoming-shows", "routes/UpcomingShows.tsx"),
 ] satisfies RouteConfig;

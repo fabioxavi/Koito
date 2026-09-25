@@ -53,6 +53,8 @@ const (
 	ARTIST_SEPARATORS_ENV          = "KOITO_ARTIST_SEPARATORS_REGEX"
 	LOGIN_GATE_ENV                 = "KOITO_LOGIN_GATE"
 	FORCE_TZ                       = "KOITO_FORCE_TZ"
+	BANDSINTOWN_APP_ID_ENV         = "KOITO_BANDSINTOWN_APP_ID"
+	UPCOMING_SHOWS_COUNTRIES_ENV   = "KOITO_UPCOMING_SHOWS_COUNTRIES"
 )
 
 type config struct {
@@ -96,6 +98,8 @@ type config struct {
 	artistSeparators       []*regexp.Regexp
 	loginGate              bool
 	forceTZ                *time.Location
+	bandsintownAppId       string
+	upcomingShowsCountries []string
 }
 
 var (
@@ -230,6 +234,18 @@ func loadConfig(getenv func(string) string, version string) (*config, error) {
 		cfg.forceTZ, err = time.LoadLocation(getenv(FORCE_TZ))
 		if err != nil {
 			return nil, fmt.Errorf("forced timezone '%s' is not a valid timezone", getenv(FORCE_TZ))
+		}
+	}
+
+	cfg.bandsintownAppId = getenv(BANDSINTOWN_APP_ID_ENV)
+	if cfg.bandsintownAppId == "" {
+		cfg.bandsintownAppId = "koito"
+	}
+	if rawCountries := getenv(UPCOMING_SHOWS_COUNTRIES_ENV); rawCountries != "" {
+		for _, c := range strings.Split(rawCountries, ",") {
+			if c = strings.TrimSpace(c); c != "" {
+				cfg.upcomingShowsCountries = append(cfg.upcomingShowsCountries, c)
+			}
 		}
 	}
 
