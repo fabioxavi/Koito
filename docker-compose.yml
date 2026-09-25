@@ -6,22 +6,22 @@ services:
       # Aqui dizemos para ele usar a base de dados de teste (koitodb_test)
       # Nota: Se o koito_db estiver na mesma rede Docker, usamos o nome do container
       # Se estiverem em redes separadas, usamos o IP do servidor (192.168.1.110)
-      KOITO_DATABASE_URL: "postgres://postgres:JoaoPedro2026@192.168.1.110:5432/koitodb"
+      KOITO_DATABASE_URL: "${KOITO_DATABASE_URL}"
       KOITO_ALLOWED_HOSTS: "100.91.8.117:4111,192.168.1.110:4111,localhost,127.0.0.1"
       # Spotify API credentials for image search
       # Get these from https://developer.spotify.com/dashboard
-      KOITO_SPOTIFY_CLIENT_ID: "476a9a4c9df2489a928eddcf1c1033f6"
-      KOITO_SPOTIFY_CLIENT_SECRET: "b13f8259cbe840dfb1b007bd1e723660"
+      KOITO_SPOTIFY_CLIENT_ID: "${KOITO_SPOTIFY_CLIENT_ID}"
+      KOITO_SPOTIFY_CLIENT_SECRET: "${KOITO_SPOTIFY_CLIENT_SECRET}"
       # Last.fm API key for artist image search
       # Get from https://www.last.fm/api/account/create
-      KOITO_LASTFM_API_KEY: "5e8ff7223f55d25a9cea8c841ee5b854"
+      KOITO_LASTFM_API_KEY: "${KOITO_LASTFM_API_KEY}"
       # Setlist.fm API key for live shows
       # Get from https://www.setlist.fm/settings/api
-      KOITO_SETLISTFM_API_KEY: "mnY8kNvyOpuhmJkxzCSRzUv86hZSwuIotS8h"
+      KOITO_SETLISTFM_API_KEY: "${KOITO_SETLISTFM_API_KEY}"
       # Bandsintown app id for upcoming shows (free, no signup required, any identifier works)
       KOITO_BANDSINTOWN_APP_ID: "koito_fabioxavi"
       # Only show upcoming concerts in these countries (comma-separated, matches Bandsintown's country names)
-      KOITO_UPCOMING_SHOWS_COUNTRIES: "Portugal"
+      KOITO_UPCOMING_SHOWS_COUNTRIES: "Portugal,Spain,France,United Kingdom,Ireland,Germany,Netherlands,Belgium,Luxembourg,Switzerland,Austria,Italy,Vatican City,San Marino,Malta,Monaco,Andorra,Liechtenstein,Denmark,Sweden,Norway,Finland,Iceland,Poland,Czechia,Czech Republic,Slovakia,Hungary,Romania,Bulgaria,Greece,Croatia,Slovenia,Bosnia and Herzegovina,Serbia,Montenegro,North Macedonia,Macedonia,Albania,Kosovo,Estonia,Latvia,Lithuania,Ukraine,Belarus,Moldova"
     ports:
       - "4111:4110"  # Acedes ao teste pela porta 4111
     volumes:
